@@ -3,43 +3,57 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AdminCheckRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    /**
+     * Affiche le formulaire de connexion
+     */
     public function index()
     {
         return view('auth.login');
     }
 
-  public function login(AdminCheckRequest $request)
-{
-    $credentials = $request->only('email', 'password');
+    /**
+     * Traitement de la connexion
+     */
+    public function login(Request $request)
+    {
+        // Validation
+        $credentials = $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
+        // Tentative de connexion
+        if (Auth::attempt($credentials)) {
+            // Regénérer la session pour sécurité
+            $request->session()->regenerate();
 
-        // Redirection selon le rôle
-        if (Auth::user()) {
-            return redirect()->route('admin.dashboard')->with('success', 'Connecté en tant que Super Admin !');
+            // Redirection vers la page souhaitée ou dashboard
+            return redirect()->intended(route('admin.dashboard'));
         }
 
-        
+        // Retour avec message d'erreur si échec
+        return back()->withErrors([
+            'email' => 'Email ou mot de passe incorrect.',
+        ])->withInput(); // garde l’email saisi
     }
 
-    return back()->with('error', 'Email ou mot de passe incorrect.');
-}
-
-
-
+    /**
+     * Déconnexion
+     */
     public function logout(Request $request)
     {
         Auth::logout();
+
+        // Invalider la session
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Redirection vers page d'accueil
         return redirect()->route('welcome');
     }
-
 }

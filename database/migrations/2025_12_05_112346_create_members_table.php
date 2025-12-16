@@ -13,10 +13,17 @@ return new class extends Migration
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone')->nullable();
-            $table->string('photo')->nullable();
+            $table->string('nom');
+            $table->string('prenoms');
+            $table->date('date_naissance');
+            $table->string('lieu_naissance');
+            $table->string('nom_pere')->nullable();
+            $table->string('nom_mere')->nullable();
+            $table->string('profession')->nullable();
+            $table->string('nationalite')->nullable();
+            $table->string('situation_matrimoniale')->nullable();
+            $table->text('adresse')->nullable();
+            $table->string('photo')->nullable(); // chemin stockage
             $table->timestamps();
         });
     }

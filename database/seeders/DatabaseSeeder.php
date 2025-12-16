@@ -19,10 +19,10 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::firstOrCreate(
-            ['email' => 'admin@gmail.com'], // si cet email existe, ne pas recréer
+            ['email' => 'admin1@gmail.com'], // si cet email existe, ne pas recréer
             [
                 'name' => 'Admin',
-                'password' => Hash::make('EEJCADMIN'),
+                'password' => Hash::make('EEJCADMIN1'),
             ]
         );
     }

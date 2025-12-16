@@ -6,41 +6,37 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class MembersCheckRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function authorize()
     {
-        return true;
+        return true; // autoriser la requête
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            'name'   => 'required|string|max:255',
-            'email'  => 'required|email|unique:members,email',
-            'phone'  => 'nullable|string|max:20',
-            'photo'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'nom'                   => 'required|string|max:255',
+            'prenoms'               => 'required|string|max:255',
+            'date_naissance'        => 'required|date',
+            'lieu_naissance'        => 'required|string|max:255',
+            'nom_pere'              => 'nullable|string|max:255',
+            'nom_mere'              => 'nullable|string|max:255',
+            'profession'            => 'nullable|string|max:255',
+            'nationalite'           => 'nullable|string|max:255',
+            'situation_matrimoniale'=> 'nullable|string|max:50',
+            'adresse'               => 'nullable|string|max:500',
+            'photo'                 => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
 
-    public function messages(): array
+    public function messages()
     {
         return [
-            'name.required'  => 'Le nom est obligatoire.',
-            'email.required' => 'L’email est obligatoire.',
-            'email.email'    => 'L’email doit être valide.',
-            'email.unique'   => 'Cet email est déjà utilisé.',
-            'photo.image'    => 'La photo doit être une image.',
-            'photo.mimes'    => 'La photo doit être au format jpg, jpeg ou png.',
-            'photo.max'      => 'La photo ne doit pas dépasser 2 Mo.',
+            'nom.required'                  => 'Le nom est obligatoire.',
+            'prenoms.required'              => 'Les prénoms sont obligatoires.',
+            'date_naissance.required'       => 'La date de naissance est obligatoire.',
+            'lieu_naissance.required'       => 'Le lieu de naissance est obligatoire.',
+            'photo.image'                   => 'Le fichier doit être une image.',
+            'photo.max'                     => 'La photo ne doit pas dépasser 2 MB.',
         ];
     }
 }
-
-
