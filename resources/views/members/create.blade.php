@@ -75,7 +75,7 @@
             @error('adresse') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 
-        {{-- 🔥 Champ photo ajouté --}}
+        
         <div class="mb-3">
             <label class="form-label">Photo</label>
             <input type="file" class="form-control" name="photo" accept="image/*">

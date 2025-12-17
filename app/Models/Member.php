@@ -22,4 +22,9 @@ class Member extends Model
         'adresse',
         'photo',
     ];
+
+    public function cotisations()
+    {
+        return $this->hasMany(Cotisation::class);
+    }
 }

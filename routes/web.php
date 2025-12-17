@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\Members\MemberController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,8 @@ Route::middleware('auth')->group(function () {
 // Gestion des membres
 Route::middleware('auth')->group(function () {
     Route::resource('members', MemberController::class);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::resource('cotisations', CotisationController::class);
 });

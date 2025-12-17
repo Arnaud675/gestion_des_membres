@@ -3,7 +3,7 @@
 @section('content')
     
 <div class="container mt-4">
-    <h1>Dashboard Agriculteur</h1>
+    <h1>Dashboard Admin</h1>
     <p>Bienvenue {{ auth()->user()->name }} !</p>
 
     {{-- <form action="{{ route('logout') }}" method="POST">

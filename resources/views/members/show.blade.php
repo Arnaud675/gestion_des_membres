@@ -23,7 +23,7 @@
                     @endif
                 </div>
 
-                {{-- Infos --}}
+               
                 <div class="col-md-8">
                     <h4 class="mb-3">{{ $member->nom }} {{ $member->prenoms }}</h4>
 
