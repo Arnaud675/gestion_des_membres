@@ -12,7 +12,7 @@ class Cotisation extends Model
     protected $table = 'cotisations';
 
     protected $fillable = [
-        'membre_id',
+        'member_id',
         'mois',
         'annee',
         'montant',
@@ -22,7 +22,7 @@ class Cotisation extends Model
     /**
      * Relation : une cotisation appartient à un membre
      */
-    public function membre()
+    public function member()
     {
         return $this->belongsTo(Member::class);
     }

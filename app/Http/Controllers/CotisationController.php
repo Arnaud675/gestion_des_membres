@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Cotisation;
 use App\Models\Member;
-use App\Models\Membre;
 use Illuminate\Http\Request;
 
 class CotisationController extends Controller
@@ -14,7 +13,7 @@ class CotisationController extends Controller
      */
     public function index()
     {
-        $cotisations = Cotisation::with('membre')
+        $cotisations = Cotisation::with('member')
             ->orderBy('annee', 'desc')
             ->orderBy('mois', 'desc')
             ->get();
@@ -25,10 +24,12 @@ class CotisationController extends Controller
     /**
      * Formulaire d'ajout
      */
-    public function create()
+    public function create(Request $request)
     {
-        $membres = Member::orderBy('nom')->get();
-        return view('cotisations.create', compact('membres'));
+        $members = Member::orderBy('nom')->get();
+        $memberId = $request->membre_id; // correspond à la base
+
+        return view('cotisations.create', compact('members', 'memberId'));
     }
 
     /**
@@ -37,7 +38,7 @@ class CotisationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'membre_id'     => 'required|exists:membres,id',
+            'member_id'     => 'required|exists:members,id',
             'mois'          => 'required|integer|min:1|max:12',
             'annee'         => 'required|integer|min:2020',
             'montant'       => 'required|numeric|min:0|max:1000',
@@ -45,7 +46,7 @@ class CotisationController extends Controller
         ]);
 
         // Vérifie si le membre a déjà payé ce mois
-        $dejaPaye = Cotisation::where('membre_id', $request->membre_id)
+        $dejaPaye = Cotisation::where('member_id', $request->membre_id)
             ->where('mois', $request->mois)
             ->where('annee', $request->annee)
             ->exists();
@@ -66,18 +67,37 @@ class CotisationController extends Controller
     /**
      * Afficher les cotisations d’un membre
      */
-    public function show($id)
+    public function parMembre(Member $member)
     {
-        $membre = Member::with('cotisations')->findOrFail($id);
-        return view('cotisations.show', compact('membre'));
+        $cotisations = $member->cotisations() // la relation doit utiliser 'membre_id'
+            ->orderBy('annee', 'desc')
+            ->orderBy('mois', 'desc')
+            ->get();
+
+        return view('cotisations.index', compact('cotisations', 'member'));
     }
 
+    /**
+     * Afficher une cotisation spécifique
+     */
+    public function show($id)
+    {
+        $member = Member::with('cotisations')->findOrFail($id);
+        return view('cotisations.show', compact('member'));
+    }
+
+    /**
+     * Formulaire d'édition
+     */
     public function edit($id)
     {
-        $cotisation = Cotisation::with('membre')->findOrFail($id);
+        $cotisation = Cotisation::with('member')->findOrFail($id);
         return view('cotisations.edit', compact('cotisation'));
     }
 
+    /**
+     * Mettre à jour une cotisation
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -90,16 +110,14 @@ class CotisationController extends Controller
         $cotisation = Cotisation::findOrFail($id);
 
         // Empêcher doublon lors de la modification
-        $existe = Cotisation::where('membre_id', $cotisation->membre_id)
+        $existe = Cotisation::where('member_id', $cotisation->membre_id)
             ->where('mois', $request->mois)
             ->where('annee', $request->annee)
             ->where('id', '!=', $id)
             ->exists();
 
         if ($existe) {
-            return back()->withErrors(
-                'Une cotisation existe déjà pour ce mois.'
-            );
+            return back()->withErrors('Une cotisation existe déjà pour ce mois.');
         }
 
         $cotisation->update($request->all());
@@ -108,7 +126,6 @@ class CotisationController extends Controller
             ->route('cotisations.index')
             ->with('success', 'Cotisation mise à jour');
     }
-
 
     /**
      * Supprimer une cotisation

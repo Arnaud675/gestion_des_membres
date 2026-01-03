@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cotisations', function (Blueprint $table) {
+       Schema::create('cotisations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('membre_id')
-                ->constrained()
+            
+            // Clé étrangère vers members (anglais)
+            $table->foreignId('member_id')
+                ->constrained()  // automatiquement "members"
                 ->onDelete('cascade');
 
             $table->tinyInteger('mois');   // 1 - 12
@@ -22,8 +24,8 @@ return new class extends Migration
             $table->decimal('montant', 10, 2);
             $table->date('date_paiement');
 
-            // Empêche deux cotisations pour le même mois
-            $table->unique(['membre_id', 'mois', 'annee']);
+            // Empêche doublons sur le même mois et membre
+            $table->unique(['member_id', 'mois', 'annee']);
 
             $table->timestamps();
         });

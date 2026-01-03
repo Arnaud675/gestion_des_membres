@@ -17,7 +17,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Membre</th>
+                <th>member</th>
                 <th>Mois</th>
                 <th>Année</th>
                 <th>Montant</th>
@@ -29,8 +29,8 @@
             @foreach($cotisations as $cotisation)
                 <tr>
                     <td>
-                        {{ $cotisation->membre->nom }}
-                        {{ $cotisation->membre->prenom }}
+                        {{ $cotisation->member->nom }}
+                        {{ $cotisation->member->prenom }}
                     </td>
                     <td>{{ $cotisation->mois }}</td>
                     <td>{{ $cotisation->annee }}</td>

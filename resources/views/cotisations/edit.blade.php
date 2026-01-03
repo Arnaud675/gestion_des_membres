@@ -19,9 +19,9 @@
         @method('PUT')
 
         <div class="mb-3">
-            <label>Membre</label>
+            <label>member</label>
             <input type="text" class="form-control"
-                   value="{{ $cotisation->membre->nom }} {{ $cotisation->membre->prenom }}"
+                   value="{{ $cotisation->member->nom }} {{ $cotisation->member->prenom }}"
                    disabled>
         </div>
 

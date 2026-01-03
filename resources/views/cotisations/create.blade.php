@@ -19,11 +19,11 @@
 
         <div class="mb-3">
             <label>Membre</label>
-            <select name="membre_id" class="form-control" required>
+            <select name="member_id" class="form-control" required>
                 <option value="">-- Choisir un membre --</option>
-                @foreach($membres as $membre)
-                    <option value="{{ $membre->id }}">
-                        {{ $membre->nom }} {{ $membre->prenom }}
+                @foreach($members as $member)
+                    <option value="{{ $member->id }}">
+                        {{ $member->nom }} {{ $member->prenom }}
                     </option>
                 @endforeach
             </select>

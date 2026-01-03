@@ -25,6 +25,6 @@ class Member extends Model
 
     public function cotisations()
     {
-        return $this->hasMany(Cotisation::class);
+        return $this->hasMany(Cotisation::class); // Laravel utilise member_id automatiquement
     }
 }

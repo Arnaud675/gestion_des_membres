@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h3>
-        Cotisations de {{ $membre->nom }} {{ $membre->prenom }}
+        Cotisations de {{ $member->nom }} {{ $member->prenom }}
     </h3>
 
     <a href="{{ route('cotisations.index') }}" class="btn btn-secondary mb-3">
@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($membre->cotisations as $cotisation)
+            @forelse($member->cotisations as $cotisation)
                 <tr>
                     <td>{{ $cotisation->mois }}</td>
                     <td>{{ $cotisation->annee }}</td>

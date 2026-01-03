@@ -25,7 +25,7 @@ class MemberController extends Controller
     {
         $data = $request->except('photo');
 
-        // Upload photo
+        
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('members', 'public');
         }

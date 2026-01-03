@@ -51,6 +51,11 @@
 
                 </div>
                 <a href="{{ route('members.index') }}" class="btn btn-secondary">← Retour</a>
+                <a href="{{ route('members.cotisations', $member->id) }}"
+   class="btn btn-secondary">
+    Cotisations du membre
+</a>
+
             </div>
 
         </div>
