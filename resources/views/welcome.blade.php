@@ -26,68 +26,83 @@
 @endsection
 
  <style>
-        body {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    font-family: "Poppins", sans-serif;
+       /* COULEURS DU LOGO */
+:root {
+    --blue: #1f4fd8;
+    --green: #1fa85b;
+    --yellow: #f2c200;
+    --red: #d62828;
+    --black: #111111;
+
+    --bg-light: #f7f9fc;
+    --border-soft: #e4e7ec;
 }
 
+/* CONTENEUR */
 .home-container {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    background: var(--bg-light);
 }
 
+/* CARD PRINCIPALE */
 .home-card {
     background: #ffffff;
-    padding: 40px;
     max-width: 700px;
+    padding: 45px;
+    border-radius: 20px;
+    border: 1px solid var(--border-soft);
     text-align: center;
-    border-radius: 16px;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
-    border-top: 6px solid #f4c430;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
 }
 
+/* TITRE */
 .home-title {
-    font-size: 26px;
-    color: #1e5aa8;
+    font-size: 28px;
+    color: var(--black);
     margin-bottom: 20px;
+    line-height: 1.4;
 }
 
 .home-title span {
     display: block;
-    color: #2e8b57;
-    margin-top: 8px;
+    margin-top: 10px;
+    color: var(--blue);
     font-weight: 600;
 }
 
+/* TEXTE */
 .home-text {
     font-size: 16px;
-    color: #1c1c1c;
+    color: #555;
     margin-bottom: 25px;
 }
 
+/* CONNECTÉ */
 .home-connected {
-    font-size: 18px;
-    color: #2e8b57;
-    font-weight: 600;
+    font-size: 16px;
+    color: var(--green);
     margin-bottom: 25px;
+    font-weight: 500;
 }
 
+/* BOUTON */
 .btn-home {
     display: inline-block;
-    padding: 12px 30px;
-    background: linear-gradient(135deg, #f4c430, #1e5aa8);
+    padding: 14px 28px;
+    border-radius: 12px;
+    background: var(--green);
     color: #ffffff;
     text-decoration: none;
-    border-radius: 30px;
-    font-weight: bold;
-    transition: 0.3s;
+    font-size: 16px;
+    font-weight: 500;
+    transition: 0.25s;
 }
 
 .btn-home:hover {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    transform: translateY(-3px);
+    background: #168a4a;
 }
+
     </style>

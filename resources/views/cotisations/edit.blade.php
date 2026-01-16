@@ -66,3 +66,115 @@
     </form>
 </div>
 @endsection
+
+<style>
+
+    /* WRAPPER */
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 10px;
+}
+
+/* FORM CARD */
+form {
+    background: #ffffff;
+    width: 100%;
+    max-width: 650px;
+    padding: 35px 40px;
+    border-radius: 18px;
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+}
+
+/* TITRE */
+.container h3 {
+    text-align: center;
+    color: var(--blue);
+    font-size: 22px;
+    margin-bottom: 30px;
+}
+
+/* FORM GROUP */
+.mb-3 label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: var(--black);
+}
+
+.mb-3 input,
+.mb-3 select {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border-soft);
+    font-size: 14px;
+    outline: none;
+}
+
+.mb-3 input:focus,
+.mb-3 select:focus {
+    border-color: var(--blue);
+}
+
+.mb-3 input[disabled] {
+    background: #f5f6fa;
+    cursor: not-allowed;
+}
+
+/* ERREURS */
+.alert-danger {
+    background: #fdecea;
+    color: var(--red);
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+}
+
+/* BOUTONS */
+.btn-success {
+    background: var(--green);
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.btn-success:hover {
+    background: #168a4a;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: var(--black);
+    padding: 12px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    form {
+        padding: 25px;
+    }
+
+    .btn-success,
+    .btn-secondary {
+        width: 100%;
+        margin-bottom: 12px;
+        text-align: center;
+    }
+}
+
+</style>

@@ -63,98 +63,122 @@
 </div>
 
 <style>
+/* WRAPPER */
 .member-details-wrapper {
-    padding: 20px;
+    padding: 20px 10px;
 }
 
+/* HEADER */
+.member-details-wrapper .header h2 {
+    color: var(--blue);
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* CARD */
 .details-card {
     background: #ffffff;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    border-radius: 18px;
+    border: 1px solid var(--border-soft);
+    padding: 25px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
 }
 
+/* PHOTO */
 .member-photo {
-    max-width: 250px;
-    width: 100%;
-    height: auto;
+    width: 160px;
+    height: 160px;
     object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid var(--blue);
 }
 
+/* NOM DU MEMBRE */
 .member-name {
-    color: #1e5aa8;
+    color: var(--black);
+    font-size: 22px;
     font-weight: 600;
 }
 
+/* TABLEAU INFO */
 .member-info-table {
     width: 100%;
+    margin-top: 15px;
     border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.member-info-table th,
-.member-info-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
+    font-size: 14px;
 }
 
 .member-info-table th {
+    text-align: left;
+    color: #555;
+    padding: 8px 12px;
     width: 40%;
-    background-color: #f1f1f1;
-    font-weight: 500;
 }
 
 .member-info-table td {
     color: #333;
+    padding: 8px 12px;
 }
 
-.btn-edit, .btn-delete, .btn-back {
-    display: inline-block;
-    margin-right: 10px;
-    margin-top: 5px;
-    padding: 8px 18px;
-    border-radius: 30px;
-    font-weight: 500;
-    font-size: 14px;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-/* Boutons modifier / supprimer */
+/* BOUTONS ACTIONS */
 .btn-edit {
-    background-color: #007bff;
-    color: #fff;
+    background: var(--yellow);
+    color: var(--black);
+    padding: 8px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    margin-right: 8px;
+    margin-top: 25px;
 }
 
 .btn-edit:hover {
-    background-color: #0069d9;
+    background: #e6b800;
 }
 
 .btn-delete {
-    background-color: #dc3545;
+    background: var(--red);
     color: #fff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
 }
 
 .btn-delete:hover {
-    background-color: #c82333;
+    background: #b91f1f;
 }
 
-/* Boutons retour / cotisations */
+/* BOUTONS DE NAVIGATION */
 .btn-back {
-    background: linear-gradient(135deg, #f4c430, #1e5aa8);
-    color: #fff;
+    display: inline-block;
+    margin-right: 10px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: #e5e7eb;
+    color: var(--black);
+    text-decoration: none;
+    font-size: 14px;
+    margin-top: 20px;
 }
 
 .btn-back:hover {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    transform: translateY(-2px);
+    background: #d1d5db;
 }
 
-.text-muted {
-    color: #6c757d;
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .details-card .row {
+        flex-direction: column;
+    }
+
+    .member-photo {
+        margin-bottom: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
+
 </style>
 @endsection

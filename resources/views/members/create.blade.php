@@ -90,144 +90,138 @@
 </div>
 
 <style>
-/* body {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    font-family: "Poppins", sans-serif;
-    margin: 0;
-    padding: 0;
-} */
-
-/* ===== CONTAINER ===== */
+/* WRAPPER */
 .form-wrapper {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding: 20px;
-    height: 100vh;
+    padding: 40px 0;
 }
 
-/* ===== FORMULAIRE ===== */
+/* FORM CARD */
 .member-form {
     background: #ffffff;
-    width: 500px;
-    border-radius: 16px;
-    padding: 30px;
-    border-top: 6px solid #f4c430;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
-
-    display: flex;
-    flex-direction: column;
-    max-height: calc(100vh - 40px); /* Hauteur max pour rester dans la sidebar */
+    width: 100%;
+    max-width: 850px;
+    padding: 35px 40px;
+    border-radius: 18px;
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
 }
 
+/* TITRE */
 .form-title {
     text-align: center;
-    margin-bottom: 20px;
-    color: #1e5aa8;
+    color: var(--blue);
     font-size: 24px;
-    font-weight: 600;
+    margin-bottom: 30px;
 }
 
+/* CONTENU */
 .form-body {
-    overflow-y: auto; /* Scroll si formulaire trop long */
-    flex: 1;
-    padding-right: 5px; /* pour scrollbar */
-}
-
-.form-row {
-    display: flex;
-    gap: 10px;
-}
-
-.form-row .form-group {
-    flex: 1; /* deux champs côte à côte avec même largeur */
-}
-
-.form-group {
-    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
+    gap: 20px;
 }
 
+/* GROUPE */
 .form-group label {
+    display: block;
+    font-size: 14px;
     margin-bottom: 6px;
-    font-weight: 500;
-    color: #1c1c1c;
+    color: var(--black);
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 2px solid #1e5aa8;
-    outline: none;
-    font-size: 14px;
-    transition: 0.3s;
     width: 100%;
-    box-sizing: border-box; /* fixe la largeur */
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border-soft);
+    font-size: 14px;
+    outline: none;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: #2e8b57;
-    box-shadow: 0 0 6px rgba(46,139,87,0.4);
+    border-color: var(--blue);
 }
 
-/* ===== BOUTONS ===== */
+/* LIGNE (2 COLONNES) */
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+/* ERREURS */
+.error {
+    display: block;
+    color: var(--red);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* BOUTONS */
 .form-buttons {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.btn-submit {
-    padding: 12px 20px;
-    background: linear-gradient(135deg, #f4c430, #1e5aa8);
-    color: #ffffff;
-    border: none;
-    border-radius: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-submit:hover {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    transform: translateY(-2px);
+    justify-content: space-between;
+    margin-top: 35px;
 }
 
 .btn-cancel {
-    padding: 12px 20px;
-    background: #cccccc;
-    color: #1c1c1c;
-    border-radius: 30px;
+    background: #e5e7eb;
+    color: var(--black);
+    padding: 12px 24px;
+    border-radius: 10px;
     text-decoration: none;
-    font-weight: 500;
-    text-align: center;
-    transition: 0.3s;
+    font-size: 14px;
 }
 
 .btn-cancel:hover {
-    background: #999999;
+    background: #d1d5db;
+}
+
+.btn-submit {
+    background: var(--green);
     color: #ffffff;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
 }
 
-/* ===== ERREURS ===== */
-.error {
-    color: #e74c3c;
-    font-size: 13px;
+.btn-submit:hover {
+    background: #168a4a;
 }
 
-.form-body::-webkit-scrollbar {
-    width: 6px;
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .member-form {
+        padding: 25px;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+    }
 }
 
-.form-body::-webkit-scrollbar-thumb {
-    background-color: rgba(30, 90, 168, 0.5);
-    border-radius: 3px;
-}
 </style>
 @endsection

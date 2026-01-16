@@ -42,55 +42,126 @@
 </div>
 
 <style>
+/* WRAPPER */
 .table-wrapper {
-    background: #fff;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    padding: 20px 10px;
 }
 
+/* TITRE */
+.table-wrapper h3 {
+    color: var(--blue);
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* BOUTON RETOUR */
 .btn-back {
-    padding: 6px 16px;
-    border-radius: 30px;
-    background: #6c757d;
-    color: #fff;
+    display: inline-block;
+    background: #e5e7eb;
+    color: var(--black);
+    padding: 10px 18px;
+    border-radius: 10px;
     text-decoration: none;
+    margin-bottom: 20px;
+    font-size: 14px;
 }
 
 .btn-back:hover {
-    background: #5a6268;
+    background: #d1d5db;
 }
 
+/* TABLE */
 .table-cotisations {
     width: 100%;
     border-collapse: collapse;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
 }
 
-.table-cotisations th, .table-cotisations td {
-    border: 1px solid #ddd;
-    padding: 10px 12px;
+/* EN-TÊTE */
+.table-cotisations thead {
+    background: #f1f2f6;
+}
+
+.table-cotisations thead th {
+    padding: 12px 10px;
     text-align: left;
+    font-size: 14px;
+    color: #555;
 }
 
-.table-cotisations th {
-    background-color: #f1f1f1;
+/* LIGNES */
+.table-cotisations tbody tr {
+    transition: 0.2s;
+}
+
+.table-cotisations tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* CELLULES */
+.table-cotisations tbody td {
+    padding: 12px 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* BADGES */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 13px;
     font-weight: 500;
-}
-
-.badge.bg-success {
-    background-color: #28a745;
     color: #fff;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
+    text-align: center;
 }
 
-.badge.bg-warning {
-    background-color: #ffc107;
-    color: #212529;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
+.bg-success {
+    background: var(--green);
 }
+
+.bg-warning {
+    background: #f1c40f;
+    color: #111;
+}
+
+/* RESPONSIVE TABLE */
+@media (max-width: 768px) {
+    .table-cotisations thead {
+        display: none;
+    }
+
+    .table-cotisations,
+    .table-cotisations tbody,
+    .table-cotisations tr,
+    .table-cotisations td {
+        display: block;
+        width: 100%;
+    }
+
+    .table-cotisations tr {
+        margin-bottom: 15px;
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        padding: 10px;
+    }
+
+    .table-cotisations td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+    }
+
+    .table-cotisations td::before {
+        content: attr(data-label);
+        font-weight: 500;
+        color: #555;
+        width: 45%;
+    }
+}
+
 </style>
 @endsection

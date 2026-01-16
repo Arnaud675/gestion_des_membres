@@ -12,7 +12,7 @@
     </div>
 
     <p class="dashboard-welcome">
-        Bienvenue <strong>{{ auth()->user()->name }}</strong> 👋  
+        Bienvenue <strong>{{ auth()->user()->name }}</strong>  
         Nous sommes heureux de vous revoir.
     </p>
 
@@ -22,7 +22,7 @@
         </a>
 
         <a href="{{ route('members.index') }}" class="btn-secondary">
-            👥 Voir les membres
+             Voir les membres
         </a>
     </div>
 
@@ -32,75 +32,83 @@
 
 <style>
 
-    /* ===== DASHBOARD ===== */
+   /* DASHBOARD ADMIN */
 .dashboard {
-    max-width: 100%;
+    padding: 30px;
 }
 
+/* HEADER */
 .dashboard-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .dashboard-header h1 {
-    margin: 0;
-    color: #1e5aa8;
-    font-size: 26px;
+    font-size: 24px;
+    color: var(--blue);
 }
 
+/* BADGE ADMIN */
 .badge-admin {
-    background: #2e8b57;
-    color: #ffffff;
-    padding: 5px 14px;
+    background: var(--yellow);
+    color: var(--black);
+    padding: 6px 14px;
     border-radius: 20px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
+/* MESSAGE DE BIENVENUE */
 .dashboard-welcome {
     font-size: 16px;
+    color: #555;
     margin-bottom: 30px;
-    color: #333;
 }
 
+.dashboard-welcome strong {
+    color: var(--black);
+}
+
+/* ACTIONS */
 .dashboard-actions {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     flex-wrap: wrap;
 }
 
-/* Boutons */
+/* BOUTON PRINCIPAL */
 .btn-dashboard {
-    padding: 12px 25px;
-    background: linear-gradient(135deg, #f4c430, #1e5aa8);
-    color: #ffffff;
+    background: var(--green);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 12px;
     text-decoration: none;
-    border-radius: 30px;
-    font-weight: 600;
-    transition: 0.3s;
+    font-size: 15px;
+    font-weight: 500;
+    transition: 0.25s;
 }
 
 .btn-dashboard:hover {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    transform: translateY(-2px);
+    background: #168a4a;
 }
 
+/* BOUTON SECONDAIRE */
 .btn-secondary {
-    padding: 12px 25px;
-    background: #ffffff;
-    color: #1e5aa8;
-    border: 2px solid #1e5aa8;
+    background: var(--blue);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 12px;
     text-decoration: none;
-    border-radius: 30px;
-    font-weight: 600;
-    transition: 0.3s;
+    font-size: 15px;
+    font-weight: 500;
+    transition: 0.25s;
 }
 
 .btn-secondary:hover {
-    background: #1e5aa8;
-    color: #ffffff;
+    background: #183fb4;
 }
+
 
 </style>

@@ -46,55 +46,131 @@
 </div>
 
 <style>
+/* WRAPPER */
 .table-wrapper {
-    background: #fff;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    padding: 20px 10px;
 }
 
+/* TITRE */
+.table-wrapper h3 {
+    color: var(--blue);
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* MESSAGE SUCCÈS */
+.alert-success {
+    background: #e9f7ef;
+    color: var(--green);
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #cdeedb;
+}
+
+/* BOUTON NOUVELLE COTISATION */
 .btn-new {
     display: inline-block;
-    padding: 8px 18px;
-    border-radius: 30px;
-    background: linear-gradient(135deg, #f4c430, #1e5aa8);
+    background: var(--green);
     color: #fff;
+    padding: 10px 20px;
+    border-radius: 12px;
     text-decoration: none;
-}
-
-.btn-new:hover {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    transform: translateY(-2px);
-}
-
-.table-cotisations {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table-cotisations th, .table-cotisations td {
-    border: 1px solid #ddd;
-    padding: 10px 12px;
-    text-align: left;
-}
-
-.table-cotisations th {
-    background-color: #1e5aa8;
-    color: #fff;
+    margin-bottom: 20px;
     font-weight: 500;
 }
 
+.btn-new:hover {
+    background: #168a4a;
+}
+
+/* CARD TABLE */
+.table-cotisations {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+
+/* EN-TÊTE */
+.table-cotisations thead {
+    background: #f1f2f6;
+}
+
+.table-cotisations thead th {
+    padding: 12px 10px;
+    text-align: left;
+    font-size: 14px;
+    color: #555;
+}
+
+/* LIGNES */
+.table-cotisations tbody tr {
+    transition: 0.2s;
+}
+
+.table-cotisations tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* CELLULES */
+.table-cotisations tbody td {
+    padding: 12px 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* BOUTON SUPPRIMER */
 .btn-delete {
-    padding: 5px 12px;
-    border-radius: 20px;
-    background: #dc3545;
+    background: var(--red);
     color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
     border: none;
+    font-size: 13px;
     cursor: pointer;
 }
 
 .btn-delete:hover {
-    background: #c82333;
+    background: #b91f1f;
 }
+
+/* RESPONSIVE TABLE */
+@media (max-width: 768px) {
+    .table-cotisations thead {
+        display: none;
+    }
+
+    .table-cotisations,
+    .table-cotisations tbody,
+    .table-cotisations tr,
+    .table-cotisations td {
+        display: block;
+        width: 100%;
+    }
+
+    .table-cotisations tr {
+        margin-bottom: 15px;
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        padding: 10px;
+    }
+
+    .table-cotisations td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+    }
+
+    .table-cotisations td::before {
+        content: attr(data-label);
+        font-weight: 500;
+        color: #555;
+        width: 45%;
+    }
+}
+
 </style>
 @endsection

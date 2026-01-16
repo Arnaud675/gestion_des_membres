@@ -79,133 +79,175 @@
 </div>
 
 <style>
-/* body {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    font-family: "Poppins", sans-serif;
-    margin: 0;
-    padding: 0;
-} */
-
+/* WRAPPER */
 .members-wrapper {
-    padding: 20px;
+    padding: 20px 10px;
 }
 
-.header h2 {
-    color: #ffffff;
+/* HEADER */
+.members-wrapper .header h2 {
+    color: var(--blue);
+    font-size: 24px;
 }
 
+/* BOUTON AJOUT */
 .btn-add {
-    background: linear-gradient(135deg, #f4c430, #1e5aa8);
+    background: var(--green);
     color: #fff;
-    padding: 10px 18px;
-    border-radius: 30px;
+    padding: 12px 22px;
+    border-radius: 12px;
     text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .btn-add:hover {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    transform: translateY(-2px);
+    background: #168a4a;
 }
 
+/* MESSAGE SUCCÈS */
 .alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    background: #e9f7ef;
+    color: var(--green);
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #cdeedb;
 }
 
+/* CARD TABLE */
 .members-card {
     background: #ffffff;
-    border-radius: 16px;
+    border-radius: 18px;
+    border: 1px solid var(--border-soft);
     padding: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    overflow-x: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    margin-top: 20px;
 }
 
+/* TABLE */
 .members-table {
     width: 100%;
     border-collapse: collapse;
-    text-align: left;
 }
 
-.members-table th,
+/* EN-TÊTE */
+.members-table thead th {
+    text-align: left;
+    font-size: 14px;
+    color: #555;
+    padding: 12px 10px;
+    border-bottom: 2px solid var(--border-soft);
+}
+
+/* LIGNES */
+.members-table tbody tr {
+    transition: 0.2s;
+}
+
+.members-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* CELLULES */
 .members-table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
+    padding: 14px 10px;
+    font-size: 14px;
+    color: #333;
     vertical-align: middle;
 }
 
-.members-table thead {
-    background-color: #1e5aa8;
-    color: #fff;
-}
-
+/* IMAGE */
 .member-img {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
     object-fit: cover;
-    border-radius: 8px;
+    border: 2px solid var(--blue);
 }
 
-.actions a,
-.actions button {
-    margin-right: 5px;
-    padding: 6px 10px;
-    border-radius: 20px;
+/* ACTIONS */
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+/* BOUTONS */
+.btn-view {
+    background: var(--blue);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
     font-size: 13px;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
     text-decoration: none;
 }
 
-.btn-view {
-    background-color: #17a2b8;
-    color: #fff;
-}
-
-.btn-view:hover {
-    background-color: #138496;
-}
-
 .btn-edit {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.btn-edit:hover {
-    background-color: #0069d9;
+    background: var(--yellow);
+    color: var(--black);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    text-decoration: none;
 }
 
 .btn-delete {
-    background-color: #dc3545;
+    background: var(--red);
     color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
 }
 
-.btn-delete:hover {
-    background-color: #c82333;
-}
-
+/* PAGINATION */
 .pagination-wrapper {
-    margin-top: 15px;
-    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
 }
 
-.pagination-wrapper .page-link {
-    color: #1e5aa8;
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .members-table thead {
+        display: none;
+    }
+
+    .members-table,
+    .members-table tbody,
+    .members-table tr,
+    .members-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .members-table tr {
+        margin-bottom: 15px;
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        padding: 10px;
+    }
+
+    .members-table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+    }
+
+    .members-table td::before {
+        content: attr(data-label);
+        font-weight: 500;
+        color: #555;
+    }
+
+    .actions {
+        justify-content: flex-end;
+        
+    }
 }
 
-.pagination-wrapper .page-item.active .page-link {
-    background-color: #1e5aa8;
-    border-color: #1e5aa8;
-    color: #fff;
-}
-
-.text-muted {
-    color: #6c757d;
-}
 </style>
 @endsection

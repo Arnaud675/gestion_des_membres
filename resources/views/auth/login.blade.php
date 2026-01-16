@@ -25,79 +25,75 @@
 </div>
 
 <style>
-
-     body {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    font-family: "Poppins", sans-serif;
-}
-
-    /* ===== FORMULAIRE LOGIN ===== */
+/* CONTENEUR CENTRÉ */
 .login-form {
+    width: 380px;
     background: #ffffff;
     padding: 35px;
-    width: 360px;
-    border-radius: 16px;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
-    border-top: 6px solid #f4c430;
+    border-radius: 18px;
+    border: 1px solid #e4e7ec;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* TITRE */
 .login-title {
     text-align: center;
     margin-bottom: 25px;
-    color: #1e5aa8;
-    font-size: 24px;
-    font-weight: 600;
+    color: #1f4fd8; /* Bleu du logo */
+    font-size: 22px;
 }
 
-.mb-3 {
+/* CHAMPS */
+.login-form .mb-3 {
     margin-bottom: 18px;
 }
 
 .login-form label {
     display: block;
     margin-bottom: 6px;
-    color: #1c1c1c;
-    font-weight: 500;
+    font-size: 14px;
+    color: #111111;
 }
 
 .login-form input {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 2px solid #1e5aa8;
-    outline: none;
-    transition: 0.3s;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid #dcdfe6;
     font-size: 14px;
+    transition: 0.2s;
 }
 
 .login-form input:focus {
-    border-color: #2e8b57;
-    box-shadow: 0 0 6px rgba(46,139,87,0.4);
+    outline: none;
+    border-color: #1fa85b; /* Vert du logo */
 }
 
+/* ERREURS */
+.error {
+    color: #d62828; /* Rouge */
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* BOUTON */
 .btn-login {
     width: 100%;
     margin-top: 10px;
     padding: 12px;
-    background: linear-gradient(135deg, #f4c430, #1e5aa8);
+    background: #1fa85b; /* Vert */
     color: #ffffff;
     border: none;
-    border-radius: 30px;
-    font-weight: bold;
+    border-radius: 12px;
     font-size: 15px;
+    font-weight: 500;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.25s;
 }
 
 .btn-login:hover {
-    background: linear-gradient(135deg, #1e5aa8, #2e8b57);
-    transform: translateY(-2px);
-}
-
-/* ===== ERREURS ===== */
-.error {
-    color: #e74c3c;
-    font-size: 13px;
+    background: #168f4c;
 }
 
 </style>
