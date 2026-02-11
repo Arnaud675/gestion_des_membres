@@ -5,9 +5,11 @@
 
     <div class="header d-flex justify-content-between align-items-center mb-4">
         <h2>Liste des membres</h2>
-        <a href="{{ route('members.create') }}" class="btn-add">
-            + Ajouter un membre
-        </a>
+        @if(!auth()->user()->isAdmin())
+            <a href="{{ route('members.create') }}" class="btn-add">
+                + Ajouter un membre
+            </a>
+        @endif
     </div>
 
     {{-- Message succès --}}
@@ -51,13 +53,15 @@
 
                         <td class="actions">
                             <a href="{{ route('members.show', $member->id) }}" class="btn-view">Voir</a>
-                            <a href="{{ route('members.edit', $member->id) }}" class="btn-edit">Modifier</a>
+                            @if(!auth()->user()->isAdmin())
+                                <a href="{{ route('members.edit', $member->id) }}" class="btn-edit">Modifier</a>
 
-                            <form action="{{ route('members.destroy', $member->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer ce membre ?');">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn-delete">Supprimer</button>
-                            </form>
+                                <form action="{{ route('members.destroy', $member->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer ce membre ?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn-delete">Supprimer</button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @empty

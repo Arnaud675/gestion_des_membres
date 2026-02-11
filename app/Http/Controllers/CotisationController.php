@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Cotisation;
 use App\Models\Member;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CotisationController extends Controller
 {
@@ -26,6 +28,12 @@ class CotisationController extends Controller
      */
     public function create(Request $request)
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->isAdmin()) {
+            return redirect()->route('cotisations.index')->with('error', 'Les admins ne peuvent pas ajouter de cotisations.');
+        }
+
         $members = Member::orderBy('nom')->get();
         $memberId = $request->membre_id; // correspond à la base
 
@@ -37,6 +45,12 @@ class CotisationController extends Controller
      */
     public function store(Request $request)
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->isAdmin()) {
+            return redirect()->route('cotisations.index')->with('error', 'Les admins ne peuvent pas ajouter de cotisations.');
+        }
+
         $request->validate([
             'member_id'     => 'required|exists:members,id',
             'mois'          => 'required|integer|min:1|max:12',
@@ -91,6 +105,12 @@ class CotisationController extends Controller
      */
     public function edit($id)
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->isAdmin()) {
+            return redirect()->route('cotisations.index')->with('error', 'Les admins ne peuvent pas modifier les cotisations.');
+        }
+
         $cotisation = Cotisation::with('member')->findOrFail($id);
         return view('cotisations.edit', compact('cotisation'));
     }
@@ -100,6 +120,12 @@ class CotisationController extends Controller
      */
     public function update(Request $request, $id)
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->isAdmin()) {
+            return redirect()->route('cotisations.index')->with('error', 'Les admins ne peuvent pas modifier les cotisations.');
+        }
+
         $request->validate([
             'mois'          => 'required|integer|min:1|max:12',
             'annee'         => 'required|integer|min:2020',
@@ -132,6 +158,12 @@ class CotisationController extends Controller
      */
     public function destroy($id)
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->isAdmin()) {
+            return redirect()->route('cotisations.index')->with('error', 'Les admins ne peuvent pas supprimer les cotisations.');
+        }
+
         $cotisation = Cotisation::findOrFail($id);
         $cotisation->delete();
 

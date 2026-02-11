@@ -9,7 +9,9 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <a href="{{ route('cotisations.create') }}" class="btn-new mb-3">Nouvelle cotisation</a>
+    @if(!auth()->user()->isAdmin())
+        <a href="{{ route('cotisations.create') }}" class="btn-new mb-3">Nouvelle cotisation</a>
+    @endif
 
     @php
         $moisNoms = [
@@ -49,13 +51,15 @@
                     <td>{{ number_format($cotisation->montant, 0, ',', ' ') }} FCFA</td>
                     <td>{{ \Carbon\Carbon::parse($cotisation->date_paiement)->format('d/m/Y') }}</td>
                     <td>
-                        <form action="{{ route('cotisations.destroy', $cotisation->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn-delete" onclick="return confirm('Supprimer cette cotisation ?')">
-                                Supprimer
-                            </button>
-                        </form>
+                        @if(!auth()->user()->isAdmin())
+                            <form action="{{ route('cotisations.destroy', $cotisation->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn-delete" onclick="return confirm('Supprimer cette cotisation ?')">
+                                    Supprimer
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach

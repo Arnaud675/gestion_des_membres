@@ -23,6 +23,16 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'password' => Hash::make('EEJCADMIN1'),
+                'role' => 'admin',
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'admin2@gmail.com'], // si cet email existe, ne pas recréer
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('EEJCADMIN2'),
+                'role' => 'user',
             ]
         );
     }

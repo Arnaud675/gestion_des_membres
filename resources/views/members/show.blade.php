@@ -38,14 +38,16 @@
                     </table>
 
                     <div class="mt-3">
-                        <a href="{{ route('members.edit', $member->id) }}" class="btn-edit">Modifier</a>
+                        @if(!auth()->user()->isAdmin())
+                            <a href="{{ route('members.edit', $member->id) }}" class="btn-edit">Modifier</a>
 
-                        <form action="{{ route('members.destroy', $member->id) }}" method="POST" class="d-inline"
-                              onsubmit="return confirm('Voulez-vous vraiment supprimer ce membre ?');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn-delete">Supprimer</button>
-                        </form>
+                            <form action="{{ route('members.destroy', $member->id) }}" method="POST" class="d-inline"
+                                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce membre ?');">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn-delete">Supprimer</button>
+                            </form>
+                        @endif
                     </div>
 
                     <div class="mt-3">
