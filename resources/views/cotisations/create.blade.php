@@ -38,9 +38,25 @@
             <div class="form-group">
                 <label>Mois</label>
                 <select name="mois" class="form-control" required>
-                    @for($i = 1; $i <= 12; $i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                    @endfor
+                    @php
+        $moisNoms = [
+            1 => 'Janvier',
+            2 => 'Février',
+            3 => 'Mars',
+            4 => 'Avril',
+            5 => 'Mai',
+            6 => 'Juin',
+            7 => 'Juillet',
+            8 => 'Août',
+            9 => 'Septembre',
+            10 => 'Octobre',
+            11 => 'Novembre',
+            12 => 'Décembre'
+        ];
+    @endphp
+    @foreach($moisNoms as $numero => $nom)
+        <option value="{{ $numero }}">{{ $nom }}</option>
+    @endforeach
                 </select>
             </div>
 

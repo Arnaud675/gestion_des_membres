@@ -46,7 +46,7 @@ class CotisationController extends Controller
         ]);
 
         // Vérifie si le membre a déjà payé ce mois
-        $dejaPaye = Cotisation::where('member_id', $request->membre_id)
+        $dejaPaye = Cotisation::where('member_id', $request->member_id)
             ->where('mois', $request->mois)
             ->where('annee', $request->annee)
             ->exists();
@@ -110,7 +110,7 @@ class CotisationController extends Controller
         $cotisation = Cotisation::findOrFail($id);
 
         // Empêcher doublon lors de la modification
-        $existe = Cotisation::where('member_id', $cotisation->membre_id)
+        $existe = Cotisation::where('member_id', $cotisation->member_id)
             ->where('mois', $request->mois)
             ->where('annee', $request->annee)
             ->where('id', '!=', $id)

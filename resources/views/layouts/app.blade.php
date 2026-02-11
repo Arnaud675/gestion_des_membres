@@ -64,8 +64,9 @@ body {
 }
 
 .sidebar-header img {
-    width: 65px;
+    width: 100px;
     margin-bottom: 10px;
+    border-radius: 10px;
 }
 
 .sidebar-header h3 {
@@ -155,7 +156,7 @@ body {
 </style>
 
 
-    </style>
+    
 </head>
 <body>
 
@@ -165,7 +166,7 @@ body {
     <aside class="sidebar">
 
         <div class="sidebar-header">
-            <img src="{{ asset('logo.png') }}" alt="Logo EEJ-C">
+            <img src="{{ asset('assets/LogoEEJC.jpeg') }}" alt="Logo EEJ-C">
             <h3>EEJ-C Admin</h3>
         </div>
 

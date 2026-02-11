@@ -11,6 +11,24 @@
 
     <a href="{{ route('cotisations.create') }}" class="btn-new mb-3">Nouvelle cotisation</a>
 
+    @php
+        $moisNoms = [
+            1 => 'Janvier',
+            2 => 'Février',
+            3 => 'Mars',
+            4 => 'Avril',
+            5 => 'Mai',
+            6 => 'Juin',
+            7 => 'Juillet',
+            8 => 'Août',
+            9 => 'Septembre',
+            10 => 'Octobre',
+            11 => 'Novembre',
+            12 => 'Décembre'
+        ];
+    @endphp
+   
+     
     <table class="table-cotisations">
         <thead>
             <tr>
@@ -26,10 +44,10 @@
             @foreach($cotisations as $cotisation)
                 <tr>
                     <td>{{ $cotisation->member->nom }} {{ $cotisation->member->prenom }}</td>
-                    <td>{{ $cotisation->mois }}</td>
+                    <td>{{ $moisNoms[$cotisation->mois] ?? $cotisation->mois }}</td>
                     <td>{{ $cotisation->annee }}</td>
-                    <td>{{ $cotisation->montant }}</td>
-                    <td>{{ $cotisation->date_paiement }}</td>
+                    <td>{{ number_format($cotisation->montant, 0, ',', ' ') }} FCFA</td>
+                    <td>{{ \Carbon\Carbon::parse($cotisation->date_paiement)->format('d/m/Y') }}</td>
                     <td>
                         <form action="{{ route('cotisations.destroy', $cotisation->id) }}" method="POST">
                             @csrf
