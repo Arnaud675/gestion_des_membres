@@ -52,6 +52,7 @@
                     <td>{{ \Carbon\Carbon::parse($cotisation->date_paiement)->format('d/m/Y') }}</td>
                     <td>
                         @if(!auth()->user()->isAdmin())
+                            <a href="{{ route('cotisations.edit', $cotisation->id) }}" class="btn-edit">Modifier</a>
                             <form action="{{ route('cotisations.destroy', $cotisation->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')

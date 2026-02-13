@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'EEJ-C Admin')</title>
 
-    <style>
+    
 <style>
 /* RESET */
 * {

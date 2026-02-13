@@ -17,8 +17,17 @@
     </p>
 
     <div class="dashboard-actions">
+        @if (!auth()->user()->isAdmin())
+            
+        
         <a href="{{ route('members.create') }}" class="btn-dashboard">
             ➕ Ajouter un membre
+        </a>
+
+        @endif
+
+         <a href="{{ route('cotisations.index') }}" class="btn-dashboard">
+             Voir les cotisations
         </a>
 
         <a href="{{ route('members.index') }}" class="btn-secondary">
