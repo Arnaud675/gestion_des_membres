@@ -1,258 +1,645 @@
 <div class="auth-container">
-    <div class="auth-content">
-        <!-- Logo Section -->
-        <div class="auth-logo-section">
-            <img src="{{ asset('assets/LogoEEJC.jpeg') }}" alt="Logo EEJC" class="auth-logo">
-            <div class="auth-badge">Gestion des Membres</div>
+    <!-- Éléments décoratifs -->
+    <div class="decoration-circle decoration-1"></div>
+    <div class="decoration-circle decoration-2"></div>
+    <div class="decoration-circle decoration-3"></div>
+    
+    <div class="auth-card">
+        <!-- Bannière avec dégradé -->
+        <div class="auth-banner">
+            <div class="banner-overlay"></div>
         </div>
-
-        <!-- Form Section -->
-        <div class="auth-form-section">
-            <form action="{{ route('login') }}" method="POST" class="login-form">
-                @csrf
-
-                <div class="form-header">
-                    <h1 class="form-title">Bienvenue</h1>
-                    <p class="form-subtitle">Connectez-vous à votre compte</p>
+        
+        <div class="auth-content">
+            <!-- Logo et titre -->
+            <div class="auth-header">
+                <div class="logo-wrapper">
+                    <img src="{{ asset('assets/LogoEEJC.jpeg') }}" alt="Logo Église des Envoyés de Jésus-Christ" class="auth-logo">
+                    <div class="logo-glow"></div>
                 </div>
+                
+                <h1 class="auth-title">
+                    <span class="title-line">Bienvenue sur</span>
+                    <span class="title-highlight">l'Espace de Gestion</span>
+                </h1>
+                
+                <div class="auth-badge-group">
+                    <span class="auth-badge" style="background: var(--blue);">Administrateur</span>
+                    <span class="auth-badge" style="background: var(--green);">Membres</span>
+                    <span class="auth-badge" style="background: var(--yellow);">Cotisations</span>
+                </div>
+            </div>
 
-                <!-- Email Field -->
-                <div class="form-group">
-                    <label for="email" class="form-label">
-                        <svg class="form-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            <!-- Formulaire de connexion -->
+            <div class="auth-form-wrapper">
+                <form action="{{ route('login') }}" method="POST" class="auth-form">
+                    @csrf
+
+                    <div class="form-header">
+                        <h2 class="form-title">Connexion</h2>
+                        <p class="form-subtitle">Accédez à votre espace sécurisé</p>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            <svg class="form-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            Adresse email
+                        </label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="email" 
+                                name="email" 
+                                id="email"
+                                value="{{ old('email') }}" 
+                                class="form-input @error('email') is-invalid @enderror"
+                                placeholder="votre@email.com"
+                                required
+                                autofocus
+                            >
+                            <span class="input-focus-border"></span>
+                        </div>
+                        @error('email')
+                            <div class="form-error">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <label for="password" class="form-label">
+                            <svg class="form-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            Mot de passe
+                        </label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="password" 
+                                name="password" 
+                                id="password"
+                                class="form-input @error('password') is-invalid @enderror"
+                                placeholder="••••••••"
+                                required
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <span class="input-focus-border"></span>
+                        </div>
+                        @error('password')
+                            <div class="form-error">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <!-- Options de connexion -->
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">Se souvenir de moi</span>
+                        </label>
+                        
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}" class="forgot-link">
+                                Mot de passe oublié ?
+                            </a>
+                        @endif
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-submit">
+                        <span>Se connecter</span>
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M13 5l7 7-7 7M5 12h15"/>
                         </svg>
-                        Email
-                    </label>
-                    <input 
-                        id="email"
-                        type="email" 
-                        name="email" 
-                        value="{{ old('email') }}" 
-                        class="form-input"
-                        placeholder="votre@email.com"
-                        required
-                    >
-                    @error('email')
-                        <span class="form-error">{{ $message }}</span>
-                    @enderror
-                </div>
+                        <div class="btn-glow"></div>
+                    </button>
 
-                <!-- Password Field -->
-                <div class="form-group">
-                    <label for="password" class="form-label">
-                        <svg class="form-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M12 1a5 5 0 00-5 5v6a5 5 0 0010 0V6a5 5 0 00-5-5zm0 0v6m0 0H6m6 0h6"/>
+                    <!-- Message de sécurité -->
+                    <div class="security-note">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
-                        Mot de passe
-                    </label>
-                    <input 
-                        id="password"
-                        type="password" 
-                        name="password" 
-                        class="form-input"
-                        placeholder="••••••••"
-                        required
-                    >
-                    @error('password')
-                        <span class="form-error">{{ $message }}</span>
-                    @enderror
-                </div>
+                        <span>Accès sécurisé • Connexion cryptée</span>
+                    </div>
+                </form>
+            </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn-submit">
-                    <span>Se connecter</span>
-                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M13 5l7 7-7 7M5 12h15"/>
-                    </svg>
-                </button>
-
-                <!-- Footer -->
-                <div class="form-footer">
-                    <p class="footer-text">Accès réservé aux administrateurs</p>
+            <!-- Footer avec couleurs de l'église -->
+            <div class="auth-footer">
+                <div class="footer-colors">
+                    <span style="background: var(--blue);"></span>
+                    <span style="background: var(--green);"></span>
+                    <span style="background: var(--yellow);"></span>
+                    <span style="background: var(--red);"></span>
                 </div>
-            </form>
+                <p class="copyright">
+                    © {{ date('Y') }} Église des Envoyés de Jésus-Christ. Tous droits réservés.
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
-/* Main Container */
+/* ===== VARIABLES ===== */
+:root {
+    --blue: #1f4fd8;
+    --blue-dark: #183fb4;
+    --blue-soft: #e8edff;
+    
+    --green: #1fa85b;
+    --green-dark: #168f4c;
+    --green-soft: #e8f5e9;
+    
+    --yellow: #f2c200;
+    --yellow-dark: #d9ae00;
+    --yellow-soft: #fff9e6;
+    
+    --red: #d62828;
+    --red-dark: #b91f1f;
+    --red-soft: #fee2e2;
+    
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-green: 0 4px 14px 0 rgba(31, 168, 91, 0.3);
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
 .auth-container {
-    min-height: 91vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #8bd3ab 0%, #8bd3ab 100%);
-    padding: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: linear-gradient(135deg, #62dda0 0%, #57bd8d 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 1.5rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.auth-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-    max-width: 1000px;
-    width: 100%;
+/* ===== ÉLÉMENTS DÉCORATIFS ===== */
+.decoration-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite ease-in-out;
 }
 
-/* Logo Section */
-.auth-logo-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
+.decoration-1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(31, 79, 216, 0.2);
+    top: -150px;
+    left: -150px;
+    animation-delay: 0s;
 }
 
-.auth-logo {
-    width: 200px;
-    height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.08));
-    animation: float 3s ease-in-out infinite;
+.decoration-2 {
+    width: 500px;
+    height: 500px;
+    background: rgba(31, 168, 91, 0.2);
+    bottom: -200px;
+    right: -200px;
+    animation-delay: 5s;
+}
+
+.decoration-3 {
+    width: 300px;
+    height: 300px;
+    background: rgba(242, 194, 0, 0.15);
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 10s;
 }
 
 @keyframes float {
     0%, 100% {
-        transform: translateY(0px);
+        transform: translate(0, 0) rotate(0deg);
+    }
+    33% {
+        transform: translate(30px, -30px) rotate(5deg);
+    }
+    66% {
+        transform: translate(-30px, 20px) rotate(-5deg);
+    }
+}
+
+/* ===== CARTE PRINCIPALE ===== */
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    max-width: 1000px;
+    width: 100%;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+    z-index: 10;
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== BANNIÈRE ===== */
+.auth-banner {
+    height: 120px;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--green) 50%, var(--yellow) 100%);
+    position: relative;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+}
+
+/* ===== CONTENU ===== */
+.auth-content {
+    padding: 2.5rem 3rem;
+    margin-top: -40px;
+}
+
+/* ===== HEADER AVEC LOGO ===== */
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.auth-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: var(--shadow-xl);
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.auth-logo:hover {
+    transform: scale(1.05);
+}
+
+.logo-glow {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: radial-gradient(circle, rgba(31, 168, 91, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    z-index: 1;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
     }
     50% {
-        transform: translateY(-10px);
+        transform: scale(1.1);
+        opacity: 0.8;
     }
+}
+
+.auth-title {
+    margin: 0.5rem 0 1rem;
+}
+
+.title-line {
+    display: block;
+    font-size: 1rem;
+    color: var(--gray-500);
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+}
+
+.title-highlight {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.auth-badge-group {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .auth-badge {
-    padding: 12px 28px;
-    background: #1fa85b;
+    padding: 0.35rem 1rem;
+    border-radius: 2rem;
     color: white;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
 }
 
-/* Form Section */
-.auth-form-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-right: 100px;
+/* ===== FORMULAIRE ===== */
+.auth-form-wrapper {
+    max-width: 400px;
+    margin: 0 auto;
 }
 
-.login-form {
-    background: #ffffff;
-    padding: 50px;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(31, 168, 91, 0.1);
-}
-
-/* Form Header */
 .form-header {
-    margin-bottom: 40px;
-    text-align: left;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 .form-title {
-    font-size: 28px;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: #1a202c;
-    margin: 0 0 8px 0;
-    letter-spacing: -0.5px;
-    text-align: center;
+    color: var(--gray-800);
+    margin: 0 0 0.25rem;
 }
 
 .form-subtitle {
-    font-size: 14px;
-    color: #718096;
+    font-size: 0.875rem;
+    color: var(--gray-500);
     margin: 0;
-    font-weight: 500;
-    text-align: center;
 }
 
-/* Form Groups */
+/* ===== FORM GROUP ===== */
 .form-group {
-    margin-bottom: 22px;
+    margin-bottom: 1.5rem;
 }
 
 .form-label {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 14px;
+    gap: 0.5rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 8px;
-    cursor: pointer;
+    color: var(--gray-700);
+    margin-bottom: 0.5rem;
 }
 
 .form-icon {
-    width: 18px;
-    height: 18px;
-    stroke-width: 2;
-    color: #1fa85b;
-    flex-shrink: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--green);
+}
+
+/* ===== INPUT WRAPPER ===== */
+.input-wrapper {
+    position: relative;
 }
 
 .form-input {
     width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    background: #f8fafc;
-    color: #1a202c;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+    color: var(--gray-800);
+    background: var(--gray-50);
+    border: 2px solid var(--gray-200);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    outline: none;
 }
 
 .form-input:focus {
-    outline: none;
-    border-color: #1fa85b;
-    background: #ffffff;
+    border-color: var(--green);
+    background: white;
     box-shadow: 0 0 0 3px rgba(31, 168, 91, 0.1);
 }
 
-.form-input::placeholder {
-    color: #a0aec0;
+.form-input.is-invalid {
+    border-color: var(--red);
+    background: var(--red-soft);
 }
 
-/* Form Error */
-.form-error {
-    display: block;
-    margin-top: 6px;
-    font-size: 12px;
-    color: #e53e3e;
-    font-weight: 500;
+.form-input.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(214, 40, 40, 0.1);
 }
 
-/* Submit Button */
-.btn-submit {
+.input-focus-border {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--green), var(--blue));
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.form-input:focus ~ .input-focus-border {
     width: 100%;
-    padding: 13px 20px;
-    margin-top: 25px;
-    background: linear-gradient(135deg, #1fa85b 0%, #168f4c 100%);
+}
+
+/* ===== PASSWORD TOGGLE ===== */
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    color: var(--gray-400);
+    transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+    color: var(--green);
+}
+
+.eye-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* ===== ERROR MESSAGE ===== */
+.form-error {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--red);
+    background: var(--red-soft);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--red);
+}
+
+.form-error svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+/* ===== FORM OPTIONS ===== */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 0;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    user-select: none;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: relative;
+    height: 1.125rem;
+    width: 1.125rem;
+    background: var(--gray-50);
+    border: 2px solid var(--gray-300);
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background: var(--gray-100);
+    border-color: var(--gray-400);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background: var(--green);
+    border-color: var(--green);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 0.3rem;
+    top: 0.1rem;
+    width: 0.25rem;
+    height: 0.5rem;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-label {
+    color: var(--gray-600);
+}
+
+.forgot-link {
+    font-size: 0.875rem;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.forgot-link:hover {
+    color: var(--green);
+    text-decoration: underline;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.btn-submit {
+    position: relative;
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 15px;
+    border-radius: 0.75rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 0.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .btn-submit:hover {
-    background: linear-gradient(135deg, #168f4c 0%, #0f7a3f 100%);
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(31, 168, 91, 0.3);
+    box-shadow: var(--shadow-green);
 }
 
 .btn-submit:active {
@@ -260,75 +647,226 @@
 }
 
 .btn-icon {
-    width: 18px;
-    height: 18px;
-    stroke-width: 2.5;
-    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.3s ease;
 }
 
-/* Form Footer */
-.form-footer {
-    margin-top: 25px;
+.btn-submit:hover .btn-icon {
+    transform: translateX(4px);
+}
+
+.btn-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.btn-submit:hover .btn-glow {
+    opacity: 1;
+}
+
+/* ===== SECURITY NOTE ===== */
+.security-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 0.75rem;
+    background: var(--gray-50);
+    border-radius: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    border: 1px solid var(--gray-200);
+}
+
+.security-note svg {
+    width: 1rem;
+    height: 1rem;
+    color: var(--green);
+}
+
+/* ===== FOOTER ===== */
+.auth-footer {
+    margin-top: 2rem;
     text-align: center;
 }
 
-.footer-text {
-    font-size: 12px;
-    color: #a0aec0;
-    margin: 0;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
+.footer-colors {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
-/* Responsive Design */
+.footer-colors span {
+    width: 40px;
+    height: 4px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.footer-colors span:hover {
+    transform: scaleX(1.2);
+}
+
+.copyright {
+    font-size: 0.7rem;
+    color: var(--gray-400);
+    margin: 0;
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .auth-content {
-        grid-template-columns: 1fr;
-        gap: 40px;
+        padding: 2rem 1.5rem;
+        margin-top: -30px;
+    }
+
+    .auth-title .title-highlight {
+        font-size: 1.5rem;
     }
 
     .auth-logo {
-        width: 150px;
+        width: 80px;
+        height: 80px;
     }
 
-    .login-form {
-        padding: 35px;
+    .form-options {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
     }
 
-    .form-title {
-        font-size: 24px;
+    .forgot-link {
+        align-self: flex-end;
     }
 
-    .form-header {
-        margin-bottom: 30px;
+    .decoration-1,
+    .decoration-2,
+    .decoration-3 {
+        opacity: 0.5;
     }
 }
 
 @media (max-width: 480px) {
-    .auth-container {
-        padding: 15px;
-    }
-
     .auth-content {
-        gap: 30px;
+        padding: 1.5rem 1rem;
     }
 
-    .login-form {
-        padding: 25px;
+    .auth-banner {
+        height: 100px;
     }
 
     .form-title {
-        font-size: 20px;
+        font-size: 1.25rem;
     }
 
     .form-group {
-        margin-bottom: 18px;
+        margin-bottom: 1rem;
     }
 
     .btn-submit {
-        padding: 11px 16px;
-        font-size: 14px;
+        padding: 0.75rem 1rem;
+    }
+
+    .footer-colors span {
+        width: 30px;
     }
 }
+
+/* ===== MODE SOMBRE ADAPTÉ ===== */
+@media (prefers-color-scheme: dark) {
+    .auth-card {
+        background: rgba(30, 34, 48, 0.95);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .form-title {
+        color: var(--gray-100);
+    }
+
+    .form-input {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+        color: var(--gray-100);
+    }
+
+    .form-input:focus {
+        background: var(--gray-700);
+    }
+
+    .checkbox-label {
+        color: var(--gray-300);
+    }
+
+    .security-note {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+        color: var(--gray-400);
+    }
+
+    .copyright {
+        color: var(--gray-500);
+    }
+}
+
+/* ===== ANIMATIONS DE CHARGEMENT ===== */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.form-input:invalid {
+    animation: none;
+}
 </style>
+
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    
+    // Animation du bouton
+    const button = document.querySelector('.password-toggle');
+    button.style.transform = 'translateY(-50%) scale(0.95)';
+    setTimeout(() => {
+        button.style.transform = 'translateY(-50%) scale(1)';
+    }, 150);
+}
+
+// Animation des champs au focus
+document.querySelectorAll('.form-input').forEach(input => {
+    input.addEventListener('focus', () => {
+        input.parentElement.classList.add('focused');
+    });
+    
+    input.addEventListener('blur', () => {
+        input.parentElement.classList.remove('focused');
+    });
+});
+
+// Validation en temps réel (optionnel)
+document.getElementById('email').addEventListener('input', function(e) {
+    const email = e.target.value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (email && !emailRegex.test(email)) {
+        this.classList.add('is-invalid');
+    } else {
+        this.classList.remove('is-invalid');
+    }
+});
+</script>
