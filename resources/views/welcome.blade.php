@@ -15,8 +15,8 @@
 
         <!-- Titre principal -->
         <h1 class="welcome-title">
-            <span class="title-line">Bienvenue sur le site de gestion</span>
-            <span class="title-highlight">L'Église des Envoyés de Jésus-Christ</span>
+            <!-- <span class="title-line">Bienvenue sur le site de gestion</span> -->
+            <span class="title-highlight">L'Eglise des Envoyés de Jésus-Christ</span>
         </h1>
 
         <!-- Séparateur décoratif -->

@@ -166,13 +166,13 @@
                         <div class="form-group">
                             <label>Montant <span class="required">*</span></label>
                             <div class="input-group">
-                                <span class="input-prefix">€</span>
+                                <span class="input-prefix">cfa</span>
                                 <input type="number" name="montant" class="form-input with-prefix" 
                                        value="{{ old('montant') }}" 
                                        min="1" max="1000" step="0.01" 
                                        placeholder="0.00" required>
                             </div>
-                            <small class="input-hint">Maximum 1000 €</small>
+                            <small class="input-hint">Maximum 1000 CFA</small>
                             @error('montant')
                                 <span class="error-feedback">{{ $message }}</span>
                             @enderror
@@ -205,7 +205,7 @@
                     </div>
                     <div class="summary-item highlight">
                         <span class="summary-label">Montant</span>
-                        <span class="summary-value" id="summaryAmount">0 €</span>
+                        <span class="summary-value" id="summaryAmount">0 CFA</span>
                     </div>
                 </div>
             </div>
@@ -759,7 +759,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Montant
         if (montantInput && montantInput.value) {
             const montant = parseFloat(montantInput.value).toFixed(2);
-            summaryAmount.textContent = `${montant} €`;
+            summaryAmount.textContent = `${montant} CFA`;
             
             // Mettre en évidence si montant > 900
             if (parseFloat(montantInput.value) > 900) {
@@ -770,7 +770,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 summaryAmount.style.fontWeight = '';
             }
         } else {
-            summaryAmount.textContent = '0 €';
+            summaryAmount.textContent = '0 CFA';
         }
     }
     

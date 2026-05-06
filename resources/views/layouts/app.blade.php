@@ -861,7 +861,7 @@
                                 <rect x="3" y="14" width="7" height="7"></rect>
                             </svg>
                         </span>
-                        <span>Dashboard</span>
+                        <span>Tableau de bord</span>
                     </a>
                 </li>
 

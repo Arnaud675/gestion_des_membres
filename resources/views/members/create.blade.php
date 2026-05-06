@@ -66,7 +66,7 @@
                             <label>Nom <span class="required">*</span></label>
                             <div class="input-group">
                                 <input type="text" name="nom" value="{{ old('nom') }}" required 
-                                       placeholder="Ex: DUPONT" class="form-input">
+                                       placeholder="Ex: ASSOUKA" class="form-input">
                                 @error('nom')
                                     <span class="error-feedback">{{ $message }}</span>
                                 @enderror
@@ -77,7 +77,7 @@
                             <label>Prénoms <span class="required">*</span></label>
                             <div class="input-group">
                                 <input type="text" name="prenoms" value="{{ old('prenoms') }}" required 
-                                       placeholder="Ex: Jean Marc" class="form-input">
+                                       placeholder="Ex: LE BRAVE" class="form-input">
                                 @error('prenoms')
                                     <span class="error-feedback">{{ $message }}</span>
                                 @enderror
@@ -101,7 +101,7 @@
                             <label>Lieu de naissance <span class="required">*</span></label>
                             <div class="input-group">
                                 <input type="text" name="lieu_naissance" value="{{ old('lieu_naissance') }}" required 
-                                       placeholder="Ex: Paris" class="form-input">
+                                       placeholder="Ex: Lomé" class="form-input">
                                 @error('lieu_naissance')
                                     <span class="error-feedback">{{ $message }}</span>
                                 @enderror
@@ -113,7 +113,7 @@
                         <label>Nationalité</label>
                         <div class="input-group">
                             <input type="text" name="nationalite" value="{{ old('nationalite') }}" 
-                                   placeholder="Ex: Française" class="form-input">
+                                   placeholder="Ex: Togolaise" class="form-input">
                             @error('nationalite')
                                 <span class="error-feedback">{{ $message }}</span>
                             @enderror
@@ -143,7 +143,7 @@
                             <label>Nom du père</label>
                             <div class="input-group">
                                 <input type="text" name="nom_pere" value="{{ old('nom_pere') }}" 
-                                       placeholder="Ex: DUPONT Pierre" class="form-input">
+                                       placeholder="Ex: GATO Pierre" class="form-input">
                                 @error('nom_pere')
                                     <span class="error-feedback">{{ $message }}</span>
                                 @enderror
@@ -154,7 +154,7 @@
                             <label>Nom de la mère</label>
                             <div class="input-group">
                                 <input type="text" name="nom_mere" value="{{ old('nom_mere') }}" 
-                                       placeholder="Ex: DUPONT Marie" class="form-input">
+                                       placeholder="Ex: GATO Marie" class="form-input">
                                 @error('nom_mere')
                                     <span class="error-feedback">{{ $message }}</span>
                                 @enderror
@@ -231,7 +231,7 @@
                         <label>Adresse complète</label>
                         <div class="input-group">
                             <textarea name="adresse" rows="3" class="form-textarea" 
-                                      placeholder="Ex: 123 Rue de la République, 75001 Paris">{{ old('adresse') }}</textarea>
+                                      placeholder="Ex: 123 Rue de la République, 701 Lomé, 90 10 72 00">{{ old('adresse') }}</textarea>
                             @error('adresse')
                                 <span class="error-feedback">{{ $message }}</span>
                             @enderror

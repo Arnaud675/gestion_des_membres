@@ -6,9 +6,9 @@
     
     <div class="auth-card">
         <!-- Bannière avec dégradé -->
-        <div class="auth-banner">
+        <!-- <div class="auth-banner">
             <div class="banner-overlay"></div>
-        </div>
+        </div> -->
         
         <div class="auth-content">
             <!-- Logo et titre -->
@@ -19,7 +19,7 @@
                 </div>
                 
                 <h1 class="auth-title">
-                    <span class="title-line">Bienvenue sur</span>
+                    <!-- <span class="title-line">Bienvenue sur</span> -->
                     <span class="title-highlight">l'Espace de Gestion</span>
                 </h1>
                 
@@ -266,7 +266,7 @@
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     max-width: 1000px;
-    width: 100%;
+    width: 35%;
     border-radius: 2rem;
     overflow: hidden;
     box-shadow: var(--shadow-2xl);
