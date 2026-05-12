@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Caisse;
 
 class Cotisation extends Model
 {
@@ -18,6 +19,7 @@ class Cotisation extends Model
         'montant',
         'date_paiement',
     ];
+    
 
     /**
      * Relation : une cotisation appartient à un membre

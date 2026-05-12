@@ -20,7 +20,6 @@
                     <span>Tableau de bord</span>
                 </div>
                 <h1 class="dashboard-title">
-                    
                     <span style="font-size: 30px" class="user-name">{{ auth()->user()->name }}</span>
                 </h1>
                 <p class="dashboard-date">{{ now()->locale('fr')->isoFormat('dddd D MMMM YYYY') }}</p>
@@ -52,13 +51,7 @@
             </div>
             <div class="stat-content">
                 <h3>Total membres</h3>
-                <p class="stat-number">{{ \App\Models\Member::count() }}</p>
-                <span class="stat-trend positive">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="18 15 12 9 6 15"></polyline>
-                    </svg>
-                    {{-- +12% ce mois --}}
-                </span>
+                <p class="stat-number">{{ $totalMembres }}</p>
             </div>
         </div>
 
@@ -71,13 +64,7 @@
             </div>
             <div class="stat-content">
                 <h3>Cotisations</h3>
-                <p class="stat-number">{{ \App\Models\Cotisation::count() }}</p>
-                <span class="stat-trend positive">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="18 15 12 9 6 15"></polyline>
-                    </svg>
-                    {{-- +8% ce mois --}}
-                </span>
+                <p class="stat-number">{{ $totalCotisations }}</p>
             </div>
         </div>
 
@@ -90,8 +77,7 @@
             </div>
             <div class="stat-content">
                 <h3>Montant total</h3>
-                <p class="stat-number">{{ number_format(\App\Models\Cotisation::sum('montant'), 0, ',', ' ') }} FCFA</p>
-                {{-- <span class="stat-trend">Ce mois</span> --}}
+                <p class="stat-number">{{ number_format($montantTotal, 0, ',', ' ') }} FCFA</p>
             </div>
         </div>
 
@@ -103,9 +89,8 @@
                 </svg>
             </div>
             <div class="stat-content">
-                <h3>Nouveaux</h3>
-                <p class="stat-number">{{ \App\Models\Member::whereMonth('created_at', now()->month)->count() }}</p>
-                <span class="stat-trend">Ce mois</span>
+                <h3>Nouveaux ce mois</h3>
+                <p class="stat-number">{{ $nouveauxMembres }}</p>
             </div>
         </div>
     </div>
@@ -161,13 +146,13 @@
                     <span class="action-arrow">→</span>
                 </a>
 
-                <a href="#" class="action-item">
+                <a href="{{ route('depenses.index') }}" class="action-item">
                     <span class="action-icon" style="background: var(--red);">
                         <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                         </svg>
                     </span>
-                    <span class="action-label">Statistiques avancées</span>
+                    <span class="action-label">Les dépenses</span>
                     <span class="action-arrow">→</span>
                 </a>
             </div>
@@ -181,56 +166,32 @@
                         <circle cx="12" cy="12" r="10"></circle>
                         <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
-                    Activités récentes
+                    Dernières activités
                 </h2>
                 <span class="badge">Live</span>
             </div>
             
             <div class="activities-list">
-                <div class="activity-item">
-                    <div class="activity-dot" style="background: var(--green);"></div>
-                    <div class="activity-content">
-                        <p class="activity-text">Nouveau membre ajouté</p>
-                        <p class="activity-time">Il y a 5 minutes</p>
+                @forelse($recentActivities as $activity)
+                    <div class="activity-item">
+                        <div class="activity-dot" style="background: {{ $activity['color'] }};"></div>
+                        <div class="activity-content">
+                            <p class="activity-text">{{ $activity['text'] }}</p>
+                            <p class="activity-time">{{ $activity['time'] }}</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="activity-item">
-                    <div class="activity-dot" style="background: var(--blue);"></div>
-                    <div class="activity-content">
-                        <p class="activity-text">Cotisation enregistrée</p>
-                        <p class="activity-time">Il y a 2 heures</p>
+                @empty
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <p class="activity-text">Aucune activité récente</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="activity-item">
-                    <div class="activity-dot" style="background: var(--yellow);"></div>
-                    <div class="activity-content">
-                        <p class="activity-text">Mise à jour du profil</p>
-                        <p class="activity-time">Il y a 1 jour</p>
-                    </div>
-                </div>
-                
-                <div class="activity-item">
-                    <div class="activity-dot" style="background: var(--red);"></div>
-                    <div class="activity-content">
-                        <p class="activity-text">Nouvelle cotisation</p>
-                        <p class="activity-time">Il y a 2 jours</p>
-                    </div>
-                </div>
+                @endforelse
             </div>
-            
-            <a href="#" class="view-all">
-                Voir toutes les activités
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </a>
         </div>
     </div>
 
-    <!-- Graphique simplifié des cotisations -->
+    <!-- Graphique réel des cotisations par mois -->
     <div class="dashboard-card chart-card">
         <div class="card-header">
             <h2>
@@ -241,29 +202,77 @@
                 </svg>
                 Évolution des cotisations
             </h2>
-            <select class="chart-select">
-                <option>Cette année</option>
-                <option>Ce mois</option>
-                <option>Cette semaine</option>
-            </select>
+            <div class="chart-controls">
+                <select id="chartYearSelect" class="chart-select">
+                    @foreach($availableYears as $year)
+                        <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>
+                            {{ $year }}
+                        </option>
+                    @endforeach
+                </select>
+                <button id="refreshChart" class="chart-refresh" title="Actualiser">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M1 20v-6h6"></path>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
         
         <div class="chart-container">
-            @php
-                $mois = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'];
-                $valeurs = [65, 59, 80, 81, 56, 55];
-                $max = max($valeurs);
-            @endphp
-            
-            <div class="chart-bars">
-                @foreach($valeurs as $index => $valeur)
-                    <div class="chart-bar-item">
+            <div class="chart-bars" id="chartBars">
+                @php
+                    $maxMontant = !empty($cotisationsParMois) ? max($cotisationsParMois) : 1;
+                    $moisNoms = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+                @endphp
+                
+                @foreach($moisNoms as $index => $nomMois)
+                    @php
+                        $montant = $cotisationsParMois[$index + 1] ?? 0;
+                        $pourcentage = $maxMontant > 0 ? ($montant / $maxMontant) * 100 : 0;
+                        $hauteur = $pourcentage * 1.5; // Max 150px
+                        $couleur = $montant > 0 ? 'var(--green)' : 'var(--gray-300)';
+                    @endphp
+                    <div class="chart-bar-item" data-montant="{{ $montant }}" data-mois="{{ $nomMois }}">
                         <div class="bar-container">
-                            <div class="bar" style="height: {{ ($valeur / $max) * 150 }}px; background: var(--blue);"></div>
+                            <div class="bar" style="height: {{ $hauteur }}px; background: {{ $couleur }};"></div>
                         </div>
-                        <span class="bar-label">{{ $mois[$index] }}</span>
+                        <span class="bar-label">{{ substr($nomMois, 0, 3) }}</span>
+                        <div class="bar-tooltip">
+                            <strong>{{ $nomMois }} {{ $selectedYear }}</strong><br>
+                            {{ number_format($montant, 0, ',', ' ') }} FCFA
+                        </div>
                     </div>
                 @endforeach
+            </div>
+        </div>
+        
+        <!-- Légende et résumé -->
+        <div class="chart-footer">
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <span class="legend-color" style="background: var(--green);"></span>
+                    <span>Cotisations enregistrées</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: var(--gray-300);"></span>
+                    <span>Aucune cotisation</span>
+                </div>
+            </div>
+            <div class="chart-summary">
+                <div class="summary-stat">
+                    <span class="stat-label">Total annuel</span>
+                    <span class="stat-value">{{ number_format(array_sum($cotisationsParMois), 0, ',', ' ') }} FCFA</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="stat-label">Moyenne mensuelle</span>
+                    <span class="stat-value">{{ number_format(empty($cotisationsParMois) ? 0 : array_sum($cotisationsParMois) / 12, 0, ',', ' ') }} FCFA</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="stat-label">Mois le plus élevé</span>
+                    <span class="stat-value">{{ $meilleurMois['nom'] ?? '-' }} {{ number_format($meilleurMois['montant'] ?? 0, 0, ',', ' ') }} FCFA</span>
+                </div>
             </div>
         </div>
     </div>
@@ -498,25 +507,8 @@
     font-size: 1.75rem;
     font-weight: 700;
     color: var(--gray-800);
-    margin: 0 0 0.25rem 0;
+    margin: 0;
     line-height: 1.2;
-}
-
-.stat-trend {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.75rem;
-    color: var(--gray-500);
-}
-
-.stat-trend.positive {
-    color: var(--green);
-}
-
-.stat-trend svg {
-    width: 0.875rem;
-    height: 0.875rem;
 }
 
 /* ===== GRILLE DASHBOARD ===== */
@@ -547,6 +539,8 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .card-header h2 {
@@ -633,9 +627,10 @@
     color: var(--blue);
 }
 
-/* ===== ACTIVITÉS RÉCENTES ===== */
+/* ===== ACTIVITÉS ===== */
 .activities-list {
-    margin-bottom: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .activity-item {
@@ -680,35 +675,16 @@
     margin: 0;
 }
 
-.view-all {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    background: var(--gray-50);
-    border-radius: 0.75rem;
-    text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--blue);
-    transition: all 0.3s ease;
-}
-
-.view-all:hover {
-    background: var(--blue);
-    color: white;
-}
-
-.view-all svg {
-    width: 1rem;
-    height: 1rem;
-}
-
 /* ===== GRAPHIQUE ===== */
 .chart-card {
     position: relative;
     z-index: 10;
+}
+
+.chart-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .chart-select {
@@ -727,15 +703,46 @@
     background-size: 1rem;
 }
 
+.chart-refresh {
+    padding: 0.5rem;
+    border: 2px solid var(--gray-200);
+    border-radius: 0.75rem;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.chart-refresh svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--gray-600);
+}
+
+.chart-refresh:hover {
+    border-color: var(--green);
+    background: var(--green-soft);
+    transform: rotate(180deg);
+}
+
+.chart-refresh:hover svg {
+    color: var(--green);
+}
+
 .chart-container {
-    padding: 1rem 0;
+    padding: 1.5rem 0;
+    overflow-x: auto;
 }
 
 .chart-bars {
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
-    height: 200px;
+    height: 220px;
+    min-width: 600px;
+    gap: 1rem;
 }
 
 .chart-bar-item {
@@ -743,7 +750,13 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    width: 40px;
+    width: 60px;
+    position: relative;
+    cursor: pointer;
+}
+
+.chart-bar-item:hover .bar-tooltip {
+    display: block;
 }
 
 .bar-container {
@@ -755,20 +768,96 @@
 
 .bar {
     width: 100%;
-    background: var(--blue);
     border-radius: 0.5rem 0.5rem 0 0;
-    transition: height 1s ease;
-    animation: growBar 1s ease-out;
-}
-
-@keyframes growBar {
-    from { height: 0; }
-    to { height: var(--height); }
+    transition: height 0.5s ease;
+    cursor: pointer;
 }
 
 .bar-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+.bar-tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gray-800);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
     font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 20;
+    margin-bottom: 0.5rem;
+}
+
+.bar-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--gray-800) transparent transparent transparent;
+}
+
+/* ===== FOOTER DU GRAPHIQUE ===== */
+.chart-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.chart-legend {
+    display: flex;
+    gap: 1rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+
+.legend-color {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.25rem;
+}
+
+.chart-summary {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.summary-stat {
+    text-align: right;
+}
+
+.summary-stat .stat-label {
+    display: block;
+    font-size: 0.7rem;
     color: var(--gray-500);
+    text-transform: uppercase;
+}
+
+.summary-stat .stat-value {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-800);
 }
 
 /* ===== RESPONSIVE ===== */
@@ -799,14 +888,6 @@
         grid-template-columns: 1fr;
     }
 
-    .chart-bars {
-        gap: 0.5rem;
-    }
-
-    .chart-bar-item {
-        width: 30px;
-    }
-
     .header-content {
         flex-direction: column;
         align-items: flex-start;
@@ -815,20 +896,32 @@
     .admin-badge {
         align-self: flex-start;
     }
+
+    .chart-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .chart-summary {
+        flex-wrap: wrap;
+    }
+    
+    .summary-stat {
+        text-align: left;
+    }
 }
 
 @media (max-width: 480px) {
     .chart-bars {
-        overflow-x: auto;
-        padding-bottom: 0.5rem;
+        min-width: 500px;
     }
     
     .chart-bar-item {
-        min-width: 40px;
+        width: 45px;
     }
 }
 
-/* ===== ANIMATIONS SUPPRÉMENTAIRES ===== */
+/* ===== ANIMATIONS ===== */
 @keyframes slideIn {
     from {
         opacity: 0;
@@ -854,12 +947,61 @@
 </style>
 
 <script>
-// Animation des barres du graphique
 document.addEventListener('DOMContentLoaded', function() {
-    const bars = document.querySelectorAll('.bar');
-    bars.forEach(bar => {
-        const height = bar.style.height;
-        bar.style.setProperty('--height', height);
+    const yearSelect = document.getElementById('chartYearSelect');
+    const refreshBtn = document.getElementById('refreshChart');
+    const chartBars = document.getElementById('chartBars');
+    
+    // Animation initiale des barres
+    animateBars();
+    
+    // Fonction pour animer les barres
+    function animateBars() {
+        const bars = document.querySelectorAll('.bar');
+        bars.forEach(bar => {
+            const height = bar.style.height;
+            bar.style.setProperty('--target-height', height);
+            bar.style.height = '0';
+            setTimeout(() => {
+                bar.style.height = height;
+            }, 100);
+        });
+    }
+    
+    // Changement d'année
+    if (yearSelect) {
+        yearSelect.addEventListener('change', function() {
+            const year = this.value;
+            window.location.href = '{{ route("admin.dashboard") }}?year=' + year;
+        });
+    }
+    
+    // Bouton d'actualisation
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            this.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                location.reload();
+            }, 300);
+        });
+    }
+    
+    // Tooltips au survol
+    const barItems = document.querySelectorAll('.chart-bar-item');
+    barItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            const tooltip = this.querySelector('.bar-tooltip');
+            if (tooltip) {
+                tooltip.style.display = 'block';
+            }
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            const tooltip = this.querySelector('.bar-tooltip');
+            if (tooltip) {
+                tooltip.style.display = 'none';
+            }
+        });
     });
 });
 </script>

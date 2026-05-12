@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cotisation;
+use App\Models\Caisse;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -72,6 +73,8 @@ class CotisationController extends Controller
         }
 
         Cotisation::create($request->all());
+
+        Caisse::ajouterMontant($request->montant);
 
         return redirect()
             ->route('cotisations.index')
@@ -166,6 +169,8 @@ class CotisationController extends Controller
 
         $cotisation = Cotisation::findOrFail($id);
         $cotisation->delete();
+
+        Caisse::retirerMontant($cotisation->montant);
 
         return back()->with('success', 'Cotisation supprimée');
     }
