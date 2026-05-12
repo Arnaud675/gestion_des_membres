@@ -22,6 +22,7 @@ return new class extends Migration
             'solde_global' => 0,
             'created_at' => now(),
             'updated_at' => now(),
+            
         ]);
     }
 
