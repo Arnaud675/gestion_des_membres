@@ -84,7 +84,7 @@
                     <div class="member-info-card">
                         <div class="member-avatar">
                             @if($cotisation->member->photo)
-                                <img src="{{ asset('storage/' . $cotisation->member->photo) }}" alt="photo">
+                                <img src="{{ $cotisation->member->photo_url }}" alt="photo">
                             @else
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>

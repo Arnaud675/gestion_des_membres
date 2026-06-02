@@ -233,7 +233,7 @@
                         <label>Photo d'identité</label>
                         <div class="photo-container">
                             <div class="photo-preview" id="photoPreview" 
-                                 @if($member->photo) style="background-image: url('{{ asset('storage/' . $member->photo) }}'); background-size: cover; background-position: center;" @endif>
+                                 @if($member->photo) style="background-image: url('{{ $member->photo_url }}'); background-size: cover; background-position: center;" @endif>
                                 @if(!$member->photo)
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                         <rect x="2" y="2" width="20" height="20" rx="2.18"></rect>

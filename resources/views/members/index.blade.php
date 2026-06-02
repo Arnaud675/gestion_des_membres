@@ -80,7 +80,7 @@
                         <td data-label="Photo" class="text-center">
                             @if($member->photo)
                                 <div class="photo-container">
-                                    <img src="{{ asset('storage/' . $member->photo) }}"
+                                    <img src="{{ $member->photo_url }}"
                                          alt="photo"
                                          class="member-img">
                                 </div>

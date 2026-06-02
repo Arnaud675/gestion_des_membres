@@ -160,7 +160,7 @@
                             <td>
                                 <div class="member-info">
                                     @if($cotisation->member->photo)
-                                        <img src="{{ asset('storage/' . $cotisation->member->photo) }}" 
+                                        <img src="{{ $cotisation->member->photo_url }}" 
                                              alt="photo" class="member-avatar">
                                     @else
                                         <div class="member-avatar-placeholder">

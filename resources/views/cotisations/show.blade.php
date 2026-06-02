@@ -27,7 +27,7 @@
         <div class="profile-header">
             <div class="profile-avatar">
                 @if($member->photo)
-                    <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->nom }}">
+                    <img src="{{ $member->photo_url }}" alt="{{ $member->nom }}">
                 @else
                     <div class="avatar-placeholder">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
