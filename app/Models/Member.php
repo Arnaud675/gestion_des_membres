@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Member extends Model
 {
@@ -26,5 +27,21 @@ class Member extends Model
     public function cotisations()
     {
         return $this->hasMany(Cotisation::class); // Laravel utilise member_id automatiquement
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        if (!$this->photo) {
+            return null;
+        }
+
+        $disk = config('filesystems.default', 'public');
+
+        if ($disk === 'gcs') {
+            $bucket = config('filesystems.disks.gcs.bucket');
+            return "https://storage.googleapis.com/{$bucket}/{$this->photo}";
+        }
+
+        return asset('storage/' . $this->photo);
     }
 }

@@ -37,7 +37,7 @@
             <div class="profile-main">
                 <div class="profile-avatar-wrapper">
                     @if($member->photo)
-                        <img src="{{ asset('storage/' . $member->photo) }}" alt="photo" class="profile-avatar">
+                        <img src="{{ $member->photo_url }}" alt="photo" class="profile-avatar">
                         <span class="avatar-status"></span>
                     @else
                         <div class="profile-avatar-placeholder">

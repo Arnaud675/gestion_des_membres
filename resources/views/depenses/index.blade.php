@@ -145,7 +145,7 @@
                             <td data-label="Membre">
                                 <div class="member-info-cell">
                                     @if($depense->member->photo)
-                                        <img src="{{ asset('storage/' . $depense->member->photo) }}" class="member-avatar-mini">
+                                        <img src="{{ $depense->member->photo_url }}" class="member-avatar-mini">
                                     @else
                                         <div class="member-avatar-placeholder-mini">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">

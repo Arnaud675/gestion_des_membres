@@ -40,7 +40,7 @@ class MemberController extends Controller
 
         
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('members', 'public');
+            $data['photo'] = $request->file('photo')->store('members', config('filesystems.default'));
         }
 
         Member::create($data);
@@ -78,7 +78,7 @@ class MemberController extends Controller
         $member = Member::findOrFail($id);
         $data = $request->all();
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('photos', 'public');
+            $data['photo'] = $request->file('photo')->store('members', config('filesystems.default'));
         }
         $member->update($data);
         return redirect()->route('members.show', $member->id)->with('success', 'Membre mis à jour.');
@@ -95,8 +95,9 @@ class MemberController extends Controller
         $member = Member::findOrFail($id);
 
         // Supprimer la photo si elle existe
-        if ($member->photo && Storage::disk('public')->exists($member->photo)) {
-            Storage::disk('public')->delete($member->photo);
+        $disk = config('filesystems.default');
+        if ($member->photo && Storage::disk($disk)->exists($member->photo)) {
+            Storage::disk($disk)->delete($member->photo);
         }
 
         $member->delete();

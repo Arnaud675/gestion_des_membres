@@ -89,7 +89,7 @@
                         <div class="member-selected-card">
                             <div class="member-selected-info">
                                 @if($depense->member->photo)
-                                    <img src="{{ asset('storage/' . $depense->member->photo) }}" class="member-selected-avatar">
+                                    <img src="{{ $depense->member->photo_url }}" class="member-selected-avatar">
                                 @else
                                     <div class="member-selected-avatar-placeholder">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
