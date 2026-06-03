@@ -16,7 +16,7 @@
         <!-- Titre principal -->
         <h1 class="welcome-title">
             <!-- <span class="title-line">Bienvenue sur le site de gestion</span> -->
-            <span class="title-highlight">L'Eglise des Envoyés de Jésus-Christ</span>
+            <span class="title-highlight">Eglise des Envoyés de Jésus-Christ</span>
         </h1>
 
         <!-- Séparateur décoratif -->
@@ -284,6 +284,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-transform: uppercase;
 }
 
 /* ===== SÉPARATEUR ===== */
