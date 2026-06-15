@@ -35,6 +35,11 @@ class Member extends Model
             return null;
         }
 
+        // Si la photo est stockée en Base64 dans la base de données (Neon)
+        if (str_starts_with($this->photo, 'data:')) {
+            return $this->photo;
+        }
+
         $disk = config('filesystems.default', 'public');
 
         if ($disk === 'gcs') {

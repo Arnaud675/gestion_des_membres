@@ -105,9 +105,10 @@ class MemberController extends Controller
 
     private function storePhoto(\Illuminate\Http\UploadedFile $file): string
     {
-        $disk = config('filesystems.default');
-
-        return Storage::disk($disk)->putFile('members', $file, 'public');
+        // Encoder l'image directement en Base64
+        $extension = $file->getClientOriginalExtension() ?: 'jpeg';
+        $data = base64_encode(file_get_contents($file->getRealPath()));
+        return "data:image/{$extension};base64,{$data}";
     }
 
     private function deletePhoto(?string $path): void
@@ -116,9 +117,13 @@ class MemberController extends Controller
             return;
         }
 
-        $disk = config('filesystems.default');
-        if (Storage::disk($disk)->exists($path)) {
-            Storage::disk($disk)->delete($path);
+        // Plus rien à supprimer physiquement si l'image est stockée en Base64 dans la base de données.
+        // Si c'est un ancien chemin de fichier physique (pour compatibilité) :
+        if (!str_starts_with($path, 'data:')) {
+            $disk = config('filesystems.default');
+            if (Storage::disk($disk)->exists($path)) {
+                Storage::disk($disk)->delete($path);
+            }
         }
     }
 }
