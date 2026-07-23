@@ -172,7 +172,8 @@
                                     @endif
                                     <div class="member-details">
                                         <span class="member-name">{{ $cotisation->member->nom }} {{ $cotisation->member->prenoms }}</span>
-                                        <span class="member-id">#{{ $cotisation->member_id }}</span>
+                                        <!-- <span class="member-id">#{{ $cotisation->member_id }}</span> -->
+                                        <span class="member-number">N° {{ $cotisation->member->numero_membre }}</span>
                                     </div>
                                 </div>
                             </td>

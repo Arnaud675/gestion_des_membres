@@ -22,7 +22,8 @@ class AdminController extends Controller
         
         // Graphique des cotisations par mois
         $selectedYear = $request->get('year', date('Y'));
-        $availableYears = Cotisation::select(DB::raw('DISTINCT YEAR(created_at) as year'))
+        $availableYears = Cotisation::select('annee as year')
+            ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year')
             ->toArray();

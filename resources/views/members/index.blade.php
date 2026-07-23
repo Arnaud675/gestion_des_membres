@@ -63,7 +63,8 @@
         <table class="members-table">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <!-- <th>#</th> -->
+                    <th>Numéro de membre</th>
                     <th>Photo</th>
                     <th>Nom & Prénoms</th>
                     <th>Date de naissance</th>
@@ -75,7 +76,8 @@
             <tbody>
                 @forelse($members as $member)
                     <tr class="member-row" data-member-id="{{ $member->id }}">
-                        <td data-label="#"> {{ $loop->iteration }}</td>
+                        <!-- <td data-label="#"> {{ $loop->iteration }}</td> -->
+                        <td data-label="Numéro de membre">N° {{ $member->numero_membre }}</td>
 
                         <td data-label="Photo" class="text-center">
                             @if($member->photo)
