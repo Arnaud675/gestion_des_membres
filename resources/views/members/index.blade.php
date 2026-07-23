@@ -77,7 +77,7 @@
                 @forelse($members as $member)
                     <tr class="member-row" data-member-id="{{ $member->id }}">
                         <!-- <td data-label="#"> {{ $loop->iteration }}</td> -->
-                        <td data-label="Numéro de membre">N° {{ $member->numero_membre }}</td>
+                        <td data-label="Numéro de membre"><strong>N° {{ $member->numero_membre }}</strong></td>
 
                         <td data-label="Photo" class="text-center">
                             @if($member->photo)
