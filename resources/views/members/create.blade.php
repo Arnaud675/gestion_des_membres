@@ -834,7 +834,7 @@ document.getElementById('photoInput')?.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         if (file.size > 2 * 1024 * 1024) {
-            alert('Le fichier est trop volumineux. Taille maximum : 2 Mo');
+            showToast('Le fichier est trop volumineux. Taille maximum : 2 Mo', 'error');
             this.value = '';
             return;
         }
