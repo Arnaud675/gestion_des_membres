@@ -54,6 +54,16 @@
                 <div class="section-body">
                     <div class="form-row">
                         <div class="form-group">
+                            <label>Numéro de membre <span class="required">*</span></label>
+                            <div class="input-group">
+                                <input type="text" name="numero_membre" value="{{ old('numero_membre', $member->numero_membre) }}" required 
+                                       placeholder="Ex: MBR-2024-001" class="form-input">
+                                @error('numero_membre')
+                                    <span class="error-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label>Nom <span class="required">*</span></label>
                             <div class="input-group">
                                 <input type="text" name="nom" value="{{ old('nom', $member->nom) }}" required 
@@ -804,7 +814,7 @@ document.getElementById('photoInput')?.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         if (file.size > 2 * 1024 * 1024) {
-            alert('Le fichier est trop volumineux. Taille maximum : 2 Mo');
+            showToast('Le fichier est trop volumineux. Taille maximum : 2 Mo', 'error');
             this.value = '';
             return;
         }
