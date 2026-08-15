@@ -66,8 +66,9 @@
                  <div class="form-group">
                             <label>Numéro de membre <span class="required">*</span></label>
                             <div class="input-group">
-                                <input type="text" name="numero_membre" value="{{ old('numero_membre') }}" required 
-                                       placeholder="Ex: MBR-2024-001" class="form-input">
+                                 <input type="text" name="numero_membre" value="{{ old('numero_membre') }}" required 
+                                       placeholder="Ex: 001" class="form-input"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                 @error('numero_membre')
                                     <span class="error-feedback">{{ $message }}</span>
                                 @enderror
@@ -125,8 +126,12 @@
                     <div class="form-group">
                         <label>Nationalité</label>
                         <div class="input-group">
-                            <input type="text" name="nationalite" value="{{ old('nationalite') }}" 
-                                   placeholder="Ex: Togolaise" class="form-input">
+                            <select name="nationalite" class="form-input">
+                                <option value="">Sélectionnez un pays</option>
+                                @foreach(config('pays') as $pays)
+                                    <option value="{{ $pays }}" {{ old('nationalite') == $pays ? 'selected' : '' }}>{{ $pays }}</option>
+                                @endforeach
+                            </select>
                             @error('nationalite')
                                 <span class="error-feedback">{{ $message }}</span>
                             @enderror
@@ -197,8 +202,12 @@
                         <div class="form-group">
                             <label>Profession</label>
                             <div class="input-group">
-                                <input type="text" name="profession" value="{{ old('profession') }}" 
-                                       placeholder="Ex: Ingénieur" class="form-input">
+                                <select name="profession" class="form-input">
+                                    <option value="">Sélectionnez une profession</option>
+                                    @foreach(config('professions') as $profession)
+                                        <option value="{{ $profession }}" {{ old('profession') == $profession ? 'selected' : '' }}>{{ $profession }}</option>
+                                    @endforeach
+                                </select>
                                 @error('profession')
                                     <span class="error-feedback">{{ $message }}</span>
                                 @enderror
