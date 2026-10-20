@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Members;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MembersCheckRequest;
+use App\Models\Caisse;
 use App\Models\Member;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
@@ -67,7 +70,7 @@ class MemberController extends Controller
         return view('members.edit', compact('member'));
     }
 
-    public function update(Request $request, $id)
+    public function update(MembersCheckRequest $request, $id)
     {
         /** @var User $user */
         $user = Auth::user();
@@ -76,7 +79,7 @@ class MemberController extends Controller
         }
 
         $member = Member::findOrFail($id);
-        $data = $request->all();
+        $data = $request->except('photo');
         if ($request->hasFile('photo')) {
             $this->deletePhoto($member->photo);
             $data['photo'] = $this->storePhoto($request->file('photo'));
@@ -94,10 +97,29 @@ class MemberController extends Controller
         }
 
         $member = Member::findOrFail($id);
+        $photo = $member->photo;
 
-        $this->deletePhoto($member->photo);
+        try {
+            DB::transaction(function () use ($member) {
+                $totalCotisations = (float) $member->cotisations()->sum('montant');
 
-        $member->delete();
+                if ($totalCotisations > 0 && !Caisse::retirerMontant($totalCotisations)) {
+                    throw new \RuntimeException(
+                        'Impossible de supprimer ce membre : le solde de la caisse est insuffisant pour retirer ses cotisations ('
+                        . number_format($totalCotisations, 0, ',', ' ') . ' FCFA).'
+                    );
+                }
+
+                $member->delete();
+            });
+        } catch (QueryException $e) {
+            return redirect()->route('members.index')
+                ->with('error', 'Impossible de supprimer ce membre : des dépenses y sont rattachées.');
+        } catch (\RuntimeException $e) {
+            return redirect()->route('members.index')->with('error', $e->getMessage());
+        }
+
+        $this->deletePhoto($photo);
 
         return redirect()->route('members.index')
             ->with('success', 'Membre supprimé avec succès !');

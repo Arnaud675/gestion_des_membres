@@ -9,6 +9,7 @@ use App\Models\Caisse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class DepenseController extends Controller
 {
@@ -87,38 +88,39 @@ class DepenseController extends Controller
         ]);
 
         try {
-            DB::beginTransaction();
+            $depense = DB::transaction(function () use ($validated) {
+                // Vérifier le solde global (ligne verrouillée jusqu'au commit)
+                $soldeGlobal = Caisse::soldeVerrouille();
+                if ($soldeGlobal < (float) $validated['montant']) {
+                    throw ValidationException::withMessages([
+                        'montant' => 'Solde global insuffisant. Solde disponible : ' . number_format($soldeGlobal, 0, ',', ' ') . ' FCFA'
+                    ]);
+                }
 
-            // Vérifier le solde global
-            $soldeGlobal = Caisse::getSoldeGlobal();
-            if ($soldeGlobal < $validated['montant']) {
-                return back()->withErrors([
-                    'montant' => 'Solde global insuffisant. Solde disponible : ' . number_format($soldeGlobal, 0, ',', ' ') . ' FCFA'
-                ])->withInput();
-            }
+                if (!Caisse::retirerMontant((float) $validated['montant'])) {
+                    throw ValidationException::withMessages([
+                        'montant' => 'Solde global insuffisant.'
+                    ]);
+                }
 
-            // Créer la dépense
-            $depense = Depense::create([
-                'member_id' => $validated['member_id'],
-                'type_evenement' => $validated['type_evenement'],
-                'montant' => $validated['montant'],
-                'date_depense' => $validated['date_depense'],
-                'description' => $validated['description'] ?? null,
-                'created_by' => Auth::id()
-            ]);
-
-            // Déduire du solde global
-            Caisse::retirerMontant($validated['montant']);
-
-            DB::commit();
-
-            return redirect()->route('depenses.show', $depense)
-                            ->with('success', 'Dépense enregistrée avec succès. Référence : ' . $depense->reference);
-
+                // Créer la dépense
+                return Depense::create([
+                    'member_id' => $validated['member_id'],
+                    'type_evenement' => $validated['type_evenement'],
+                    'montant' => $validated['montant'],
+                    'date_depense' => $validated['date_depense'],
+                    'description' => $validated['description'] ?? null,
+                    'created_by' => Auth::id()
+                ]);
+            });
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            DB::rollback();
             return back()->withErrors(['error' => 'Une erreur est survenue : ' . $e->getMessage()])->withInput();
         }
+
+        return redirect()->route('depenses.show', $depense)
+                        ->with('success', 'Dépense enregistrée avec succès. Référence : ' . $depense->reference);
     }
 
     /**
@@ -160,39 +162,38 @@ class DepenseController extends Controller
         ]);
 
         try {
-            DB::beginTransaction();
+            DB::transaction(function () use ($validated, $depense) {
+                $difference = (float) $validated['montant'] - (float) $depense->montant;
 
-            $soldeGlobal = Caisse::getSoldeGlobal();
-            $difference = $validated['montant'] - $depense->montant;
-            
-            // Si le nouveau montant est plus élevé, vérifier le solde
-            if ($difference > 0 && $soldeGlobal < $difference) {
-                return back()->withErrors([
-                    'montant' => 'Solde global insuffisant pour cette augmentation. Solde disponible : ' . number_format($soldeGlobal, 0, ',', ' ') . ' FCFA'
-                ])->withInput();
-            }
-
-            // Mettre à jour la dépense
-            $depense->update($validated);
-
-            // Ajuster le solde global
-            if ($difference != 0) {
+                // Si le nouveau montant est plus élevé, vérifier le solde
                 if ($difference > 0) {
-                    Caisse::retirerMontant($difference);
-                } else {
+                    $soldeGlobal = Caisse::soldeVerrouille();
+                    if ($soldeGlobal < $difference) {
+                        throw ValidationException::withMessages([
+                            'montant' => 'Solde global insuffisant pour cette augmentation. Solde disponible : ' . number_format($soldeGlobal, 0, ',', ' ') . ' FCFA'
+                        ]);
+                    }
+
+                    if (!Caisse::retirerMontant($difference)) {
+                        throw ValidationException::withMessages([
+                            'montant' => 'Solde global insuffisant pour cette augmentation.'
+                        ]);
+                    }
+                } elseif ($difference < 0) {
                     Caisse::ajouterMontant(abs($difference));
                 }
-            }
 
-            DB::commit();
-
-            return redirect()->route('depenses.show', $depense)
-                            ->with('success', 'Dépense modifiée avec succès');
-
+                // Mettre à jour la dépense
+                $depense->update($validated);
+            });
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            DB::rollback();
             return back()->withErrors(['error' => 'Une erreur est survenue'])->withInput();
         }
+
+        return redirect()->route('depenses.show', $depense)
+                        ->with('success', 'Dépense modifiée avec succès');
     }
 
     /**
@@ -201,21 +202,17 @@ class DepenseController extends Controller
     public function destroy(Depense $depense)
     {
         try {
-            DB::beginTransaction();
-            
-            // Rétablir le montant dans le solde global
-            Caisse::ajouterMontant($depense->montant);
-            
-            $depense->delete();
+            DB::transaction(function () use ($depense) {
+                // Rétablir le montant dans le solde global
+                Caisse::ajouterMontant((float) $depense->montant);
 
-            DB::commit();
-
-            return redirect()->route('depenses.index')
-                            ->with('success', 'Dépense supprimée avec succès');
-
+                $depense->delete();
+            });
         } catch (\Exception $e) {
-            DB::rollback();
             return back()->withErrors(['error' => 'Une erreur est survenue lors de la suppression']);
         }
+
+        return redirect()->route('depenses.index')
+                        ->with('success', 'Dépense supprimée avec succès');
     }
 }

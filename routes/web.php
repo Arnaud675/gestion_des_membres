@@ -28,22 +28,26 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::resource('cotisations', CotisationController::class);
+    Route::resource('cotisations', CotisationController::class)->except(['show']);
 });
 
 
-Route::get(
-    'members/{member}/cotisations',
-    [CotisationController::class, 'parMembre']
-)->name('members.cotisations');
+Route::middleware('auth')->group(function () {
+    Route::get(
+        'members/{member}/cotisations',
+        [CotisationController::class, 'parMembre']
+    )->name('members.cotisations');
+});
 
 // Gestion des dépenses
-Route::prefix('depenses')->name('depenses.')->group(function () {
-    Route::get('/', [DepenseController::class, 'index'])->name('index');
-    Route::get('/create', [DepenseController::class, 'create'])->name('create');
-    Route::post('/', [DepenseController::class, 'store'])->name('store');
-    Route::get('/{depense}', [DepenseController::class, 'show'])->name('show');
-    Route::get('/{depense}/edit', [DepenseController::class, 'edit'])->name('edit');
-    Route::put('/{depense}', [DepenseController::class, 'update'])->name('update');
-    Route::delete('/{depense}', [DepenseController::class, 'destroy'])->name('destroy');
+Route::middleware('auth')->group(function () {
+    Route::prefix('depenses')->name('depenses.')->group(function () {
+        Route::get('/', [DepenseController::class, 'index'])->name('index');
+        Route::get('/create', [DepenseController::class, 'create'])->name('create');
+        Route::post('/', [DepenseController::class, 'store'])->name('store');
+        Route::get('/{depense}', [DepenseController::class, 'show'])->name('show');
+        Route::get('/{depense}/edit', [DepenseController::class, 'edit'])->name('edit');
+        Route::put('/{depense}', [DepenseController::class, 'update'])->name('update');
+        Route::delete('/{depense}', [DepenseController::class, 'destroy'])->name('destroy');
+    });
 });

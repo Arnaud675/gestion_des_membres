@@ -26,33 +26,44 @@ class Caisse extends Model
     }
 
     /**
-     * Ajoute un montant au solde global
+     * Récupère le solde en verrouillant la ligne (à appeler dans une transaction).
+     */
+    public static function soldeVerrouille(): float
+    {
+        $caisse = self::query()->lockForUpdate()->first();
+        return $caisse ? (float) $caisse->solde_global : 0;
+    }
+
+    /**
+     * Ajoute un montant au solde global.
+     * À appeler dans une transaction : le verrou protège la ligne jusqu'au commit.
      */
     public static function ajouterMontant(float $montant): bool
     {
-        $caisse = self::first();
+        $caisse = self::query()->lockForUpdate()->first();
         if (!$caisse) {
             $caisse = self::create(['solde_global' => 0]);
         }
-        $caisse->solde_global += $montant;
+        $caisse->solde_global = (float) $caisse->solde_global + $montant;
         return $caisse->save();
     }
 
     /**
-     * Retire un montant du solde global
+     * Retire un montant du solde global.
+     * À appeler dans une transaction : le verrou protège la ligne jusqu'au commit.
      */
     public static function retirerMontant(float $montant): bool
     {
-        $caisse = self::first();
+        $caisse = self::query()->lockForUpdate()->first();
         if (!$caisse) {
             return false;
         }
-        
-        if ($caisse->solde_global < $montant) {
+
+        if ((float) $caisse->solde_global < $montant) {
             return false;
         }
-        
-        $caisse->solde_global -= $montant;
+
+        $caisse->solde_global = (float) $caisse->solde_global - $montant;
         return $caisse->save();
     }
 

@@ -8,6 +8,8 @@ use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class CotisationController extends Controller
 {
@@ -52,7 +54,7 @@ class CotisationController extends Controller
             return redirect()->route('cotisations.index')->with('error', 'Les admins ne peuvent pas ajouter de cotisations.');
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'member_id'     => 'required|exists:members,id',
             'mois'          => 'required|integer|min:1|max:12',
             'annee'         => 'required|integer|min:2020',
@@ -60,21 +62,26 @@ class CotisationController extends Controller
             'date_paiement' => 'required|date',
         ]);
 
-        // Vérifie si le membre a déjà payé ce mois
-        $dejaPaye = Cotisation::where('member_id', $request->member_id)
-            ->where('mois', $request->mois)
-            ->where('annee', $request->annee)
-            ->exists();
+        try {
+            DB::transaction(function () use ($validated) {
+                // Vérifie si le membre a déjà payé ce mois
+                $dejaPaye = Cotisation::where('member_id', $validated['member_id'])
+                    ->where('mois', $validated['mois'])
+                    ->where('annee', $validated['annee'])
+                    ->exists();
 
-        if ($dejaPaye) {
-            return back()
-                ->withErrors('Ce membre a déjà cotisé pour ce mois.')
-                ->withInput();
+                if ($dejaPaye) {
+                    throw ValidationException::withMessages([
+                        'mois' => 'Ce membre a déjà cotisé pour ce mois.',
+                    ]);
+                }
+
+                Cotisation::create($validated);
+                Caisse::ajouterMontant((float) $validated['montant']);
+            });
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
         }
-
-        Cotisation::create($request->all());
-
-        Caisse::ajouterMontant($request->montant);
 
         return redirect()
             ->route('cotisations.index')
@@ -92,15 +99,6 @@ class CotisationController extends Controller
             ->get();
 
         return view('cotisations.index', compact('cotisations', 'member'));
-    }
-
-    /**
-     * Afficher une cotisation spécifique
-     */
-    public function show($id)
-    {
-        $member = Member::with('cotisations')->findOrFail($id);
-        return view('cotisations.show', compact('member'));
     }
 
     /**
@@ -129,7 +127,7 @@ class CotisationController extends Controller
             return redirect()->route('cotisations.index')->with('error', 'Les admins ne peuvent pas modifier les cotisations.');
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'mois'          => 'required|integer|min:1|max:12',
             'annee'         => 'required|integer|min:2020',
             'montant'       => 'required|numeric|min:0|max:1000',
@@ -138,18 +136,39 @@ class CotisationController extends Controller
 
         $cotisation = Cotisation::findOrFail($id);
 
-        // Empêcher doublon lors de la modification
-        $existe = Cotisation::where('member_id', $cotisation->member_id)
-            ->where('mois', $request->mois)
-            ->where('annee', $request->annee)
-            ->where('id', '!=', $id)
-            ->exists();
+        try {
+            DB::transaction(function () use ($validated, $cotisation, $id) {
+                // Empêcher doublon lors de la modification
+                $existe = Cotisation::where('member_id', $cotisation->member_id)
+                    ->where('mois', $validated['mois'])
+                    ->where('annee', $validated['annee'])
+                    ->where('id', '!=', $id)
+                    ->exists();
 
-        if ($existe) {
-            return back()->withErrors('Une cotisation existe déjà pour ce mois.');
+                if ($existe) {
+                    throw ValidationException::withMessages([
+                        'mois' => 'Une cotisation existe déjà pour ce mois.',
+                    ]);
+                }
+
+                // Ajuster la caisse en fonction de la différence de montant
+                $difference = (float) $validated['montant'] - (float) $cotisation->montant;
+
+                if ($difference < 0 && !Caisse::retirerMontant(abs($difference))) {
+                    throw ValidationException::withMessages([
+                        'montant' => 'Le solde de la caisse est insuffisant pour réduire cette cotisation.',
+                    ]);
+                }
+
+                if ($difference > 0) {
+                    Caisse::ajouterMontant($difference);
+                }
+
+                $cotisation->update($validated);
+            });
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
         }
-
-        $cotisation->update($request->all());
 
         return redirect()
             ->route('cotisations.index')
@@ -168,9 +187,20 @@ class CotisationController extends Controller
         }
 
         $cotisation = Cotisation::findOrFail($id);
-        $cotisation->delete();
 
-        Caisse::retirerMontant($cotisation->montant);
+        try {
+            DB::transaction(function () use ($cotisation) {
+                if (!Caisse::retirerMontant((float) $cotisation->montant)) {
+                    throw ValidationException::withMessages([
+                        'montant' => 'Le solde de la caisse est insuffisant pour annuler cette cotisation.',
+                    ]);
+                }
+
+                $cotisation->delete();
+            });
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors());
+        }
 
         return back()->with('success', 'Cotisation supprimée');
     }

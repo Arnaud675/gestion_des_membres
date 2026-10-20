@@ -63,80 +63,26 @@
                 <div class="section-body">
 
                 <div class="form-row">
-                 <div class="form-group">
-                            <label>Numéro de membre <span class="required">*</span></label>
-                            <div class="input-group">
-                                 <input type="text" name="numero_membre" value="{{ old('numero_membre') }}" required 
-                                       placeholder="Ex: 001" class="form-input"
-                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                                @error('numero_membre')
-                                    <span class="error-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                 <x-form.input name="numero_membre" label="Numéro de membre" :value="old('numero_membre')" placeholder="Ex: 001" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Nom <span class="required">*</span></label>
-                            <div class="input-group">
-                                <input type="text" name="nom" value="{{ old('nom') }}" required 
-                                       placeholder="Ex: ASSOUKA" class="form-input">
-                                @error('nom')
-                                    <span class="error-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                        <x-form.input name="nom" label="Nom" :value="old('nom')" placeholder="Ex: ASSOUKA" required />
 
-                        <div class="form-group">
-                            <label>Prénoms <span class="required">*</span></label>
-                            <div class="input-group">
-                                <input type="text" name="prenoms" value="{{ old('prenoms') }}" required 
-                                       placeholder="Ex: LE BRAVE" class="form-input">
-                                @error('prenoms')
-                                    <span class="error-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                        <x-form.input name="prenoms" label="Prénoms" :value="old('prenoms')" placeholder="Ex: LE BRAVE" required />
                     </div>
 
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Date de naissance <span class="required">*</span></label>
-                            <div class="input-group">
-                                <input type="date" name="date_naissance" value="{{ old('date_naissance') }}" required 
-                                       class="form-input">
-                                @error('date_naissance')
-                                    <span class="error-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                        <x-form.input name="date_naissance" label="Date de naissance" :value="old('date_naissance')" type="date" required />
 
-                        <div class="form-group">
-                            <label>Lieu de naissance <span class="required">*</span></label>
-                            <div class="input-group">
-                                <input type="text" name="lieu_naissance" value="{{ old('lieu_naissance') }}" required 
-                                       placeholder="Ex: Lomé" class="form-input">
-                                @error('lieu_naissance')
-                                    <span class="error-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                        <x-form.input name="lieu_naissance" label="Lieu de naissance" :value="old('lieu_naissance')" placeholder="Ex: Lomé" required />
                     </div>
 
-                    <div class="form-group">
-                        <label>Nationalité</label>
-                        <div class="input-group">
-                            <select name="nationalite" class="form-input">
-                                <option value="">Sélectionnez un pays</option>
+                    <x-form.select name="nationalite" label="Nationalité" group="input-group">
+                            <option value="">Sélectionnez un pays</option>
                                 @foreach(config('pays') as $pays)
                                     <option value="{{ $pays }}" {{ old('nationalite') == $pays ? 'selected' : '' }}>{{ $pays }}</option>
                                 @endforeach
-                            </select>
-                            @error('nationalite')
-                                <span class="error-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+                        </x-form.select>
                 </div>
             </div>
 
@@ -157,27 +103,9 @@
 
                 <div class="section-body">
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Nom du père</label>
-                            <div class="input-group">
-                                <input type="text" name="nom_pere" value="{{ old('nom_pere') }}" 
-                                       placeholder="Ex: GATO Pierre" class="form-input">
-                                @error('nom_pere')
-                                    <span class="error-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                        <x-form.input name="nom_pere" label="Nom du père" :value="old('nom_pere')" placeholder="Ex: GATO Pierre" />
 
-                        <div class="form-group">
-                            <label>Nom de la mère</label>
-                            <div class="input-group">
-                                <input type="text" name="nom_mere" value="{{ old('nom_mere') }}" 
-                                       placeholder="Ex: GATO Marie" class="form-input">
-                                @error('nom_mere')
-                                    <span class="error-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                        <x-form.input name="nom_mere" label="Nom de la mère" :value="old('nom_mere')" placeholder="Ex: GATO Marie" />
                     </div>
                 </div>
             </div>
@@ -199,36 +127,20 @@
 
                 <div class="section-body">
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Profession</label>
-                            <div class="input-group">
-                                <select name="profession" class="form-input">
-                                    <option value="">Sélectionnez une profession</option>
+                        <x-form.select name="profession" label="Profession" group="input-group">
+                            <option value="">Sélectionnez une profession</option>
                                     @foreach(config('professions') as $profession)
                                         <option value="{{ $profession }}" {{ old('profession') == $profession ? 'selected' : '' }}>{{ $profession }}</option>
                                     @endforeach
-                                </select>
-                                @error('profession')
-                                    <span class="error-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                        </x-form.select>
 
-                        <div class="form-group">
-                            <label>Situation Matrimoniale</label>
-                            <div class="select-wrapper">
-                                <select name="situation_matrimoniale" class="form-select">
-                                    <option value="" disabled selected>Sélectionnez une option</option>
+                        <x-form.select name="situation_matrimoniale" label="Situation Matrimoniale" group="select-wrapper" class="form-select">
+                            <option value="" disabled selected>Sélectionnez une option</option>
                                     <option value="célibataire" {{ old('situation_matrimoniale') == 'célibataire' ? 'selected' : '' }}>Célibataire</option>
                                     <option value="marié(e)" {{ old('situation_matrimoniale') == 'marié(e)' ? 'selected' : '' }}>Marié(e)</option>
                                     <option value="divorcé(e)" {{ old('situation_matrimoniale') == 'divorcé(e)' ? 'selected' : '' }}>Divorcé(e)</option>
                                     <option value="veuf(ve)" {{ old('situation_matrimoniale') == 'veuf(ve)' ? 'selected' : '' }}>Veuf(ve)</option>
-                                </select>
-                                @error('situation_matrimoniale')
-                                    <span class="error-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                        </x-form.select>
                     </div>
                 </div>
             </div>
@@ -249,16 +161,7 @@
                 </div>
 
                 <div class="section-body">
-                    <div class="form-group">
-                        <label>Adresse complète</label>
-                        <div class="input-group">
-                            <textarea name="adresse" rows="3" class="form-textarea" 
-                                      placeholder="Ex: 123 Rue de la République, 701 Lomé, 90 10 72 00">{{ old('adresse') }}</textarea>
-                            @error('adresse')
-                                <span class="error-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+                    <x-form.textarea name="adresse" label="Adresse complète" rows="3" placeholder="Ex: 123 Rue de la République, 701 Lomé, 90 10 72 00">{{ old('adresse') }}</x-form.textarea>
 
                     <div class="form-group photo-upload">
                         <label>Photo d'identité</label>
