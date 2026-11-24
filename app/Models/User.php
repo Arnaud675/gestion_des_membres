@@ -54,4 +54,39 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+
+    public function isManager(): bool
+    {
+        return $this->role === 'manager';
+    }
+
+    public function isReader(): bool
+    {
+        return $this->role === 'reader';
+    }
+
+    public function canManageMembers(): bool
+    {
+        return in_array($this->role, ['admin', 'manager'], true);
+    }
+
+    public function canManageCotisations(): bool
+    {
+        return in_array($this->role, ['admin', 'manager'], true);
+    }
+
+    public function canManageDepenses(): bool
+    {
+        return in_array($this->role, ['admin', 'manager'], true);
+    }
+
+    public function canManageUsers(): bool
+    {
+        return $this->isAdmin();
+    }
+
+    public function depenses(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Depense::class, 'created_by');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MembersCheckRequest extends FormRequest
 {
@@ -14,7 +15,12 @@ class MembersCheckRequest extends FormRequest
     public function rules()
     {
         return [
-            'numero_membre'         => 'required|string|max:255|unique:members',
+            'numero_membre'         => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('members', 'numero_membre')->ignore($this->route('member')),
+            ],
             'nom'                   => 'required|string|max:255',
             'prenoms'               => 'required|string|max:255',
             'date_naissance'        => 'required|date',

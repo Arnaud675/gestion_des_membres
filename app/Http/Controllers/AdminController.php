@@ -15,10 +15,10 @@ class AdminController extends Controller
 {
 
  // Statistiques générales
-        $totalMembres = Member::count();
+        $totalMembres = Member::active()->count();
         $totalCotisations = Cotisation::count();
         $montantTotal = Cotisation::sum('montant');
-        $nouveauxMembres = Member::whereMonth('created_at', now()->month)->count();
+        $nouveauxMembres = Member::active()->whereMonth('created_at', now()->month)->count();
         
         // Graphique des cotisations par mois
         $selectedYear = $request->get('year', date('Y'));
@@ -76,7 +76,7 @@ class AdminController extends Controller
         $activities = [];
         
         // Derniers membres ajoutés
-        $recentMembers = Member::orderBy('created_at', 'desc')->limit(3)->get();
+        $recentMembers = Member::active()->orderBy('created_at', 'desc')->limit(3)->get();
         foreach ($recentMembers as $member) {
             $activities[] = [
                 'text' => "Nouveau membre : {$member->nom} {$member->prenoms}",

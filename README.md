@@ -1,59 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Gestion des membres
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Application Laravel de gestion des membres, de leurs cotisations et des dépenses de l’association. Elle comprend un tableau de bord administrateur, une caisse globale et une gestion des accès par rôle.
 
-## About Laravel
+## Prérequis
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.2 ou supérieur avec les extensions Laravel nécessaires
+- Composer
+- Node.js et npm
+- SQLite (configuration par défaut) ou MySQL
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+À la racine du projet, exécuter :
 
-## Learning Laravel
+```bash
+composer install
+npm install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Créer le fichier d’environnement et la clé Laravel :
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Laravel Sponsors
+Sous Windows PowerShell, remplacer la commande `cp` par :
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```powershell
+Copy-Item .env.example .env
+```
 
-### Premium Partners
+La configuration par défaut utilise SQLite. Créer le fichier de base de données s’il n’existe pas :
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
+```
 
-## Contributing
+Configurer les comptes initiaux dans `.env` avant de lancer les migrations et le seeder. Définir des mots de passe privés; ne jamais publier le fichier `.env`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```dotenv
+ADMIN_NAME="Administrateur"
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=remplacer-par-un-mot-de-passe
+STAFF_NAME="Gestionnaire"
+STAFF_EMAIL=gestionnaire@example.com
+STAFF_PASSWORD=remplacer-par-un-autre-mot-de-passe
+```
 
-## Code of Conduct
+Créer le schéma et les comptes :
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan migrate --seed
+```
 
-## Security Vulnerabilities
+Construire les ressources front-end :
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+npm run build
+```
 
-## License
+## Lancement
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan serve
+```
+
+Ouvrir l’adresse indiquée par Artisan, généralement `http://127.0.0.1:8000`. Pour développer les ressources front-end avec Vite dans un autre terminal :
+
+```bash
+npm run dev
+```
+
+## Fonctionnalités
+
+- Membres : ajout, consultation, modification et suppression, avec photo, recherche, filtres et pagination.
+- Cotisations : suivi des paiements mensuels et mise à jour de la caisse.
+- Dépenses : enregistrement par événement et membre, filtres, références et contrôle du solde disponible.
+- Administration : tableau de bord avec indicateurs, activités récentes et répartition des cotisations.
+- Accès : connexion requise; les comptes administrateur sont en lecture seule sur les opérations de gestion, tandis que le compte gestionnaire peut les effectuer.
+
+## Tests
+
+Lancer toute la suite :
+
+```bash
+php artisan test
+```
+
+L’environnement PHPUnit utilise SQLite en mémoire. Les tests fonctionnels des membres couvrent notamment la création avec nationalité et profession, la sélection des valeurs lors de la modification, ainsi que la recherche et la pagination.
+
+## Base de données MySQL
+
+Pour utiliser MySQL au lieu de SQLite, renseigner dans `.env` les variables `DB_CONNECTION=mysql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` et `DB_PASSWORD`, puis exécuter :
+
+```bash
+php artisan config:clear
+php artisan migrate --seed
+```
+
+## Fichiers téléversés
+
+Les photos sont conservées sur le disque public Laravel. Après l’installation, créer le lien de stockage si nécessaire :
+
+```bash
+php artisan storage:link
+```

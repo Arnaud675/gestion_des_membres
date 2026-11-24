@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,22 +16,30 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::firstOrCreate(
-            ['email' => 'admin1@gmail.com'], // si cet email existe, ne pas recréer
-            [
-                'name' => 'Admin',
-                'password' => Hash::make('EEJCADMIN1'),
-                'role' => 'admin',
-            ]
+        $this->createUserFromEnvironment(
+            config('initial_users.admin.email'),
+            config('initial_users.admin.password'),
+            config('initial_users.admin.name'),
+            'admin'
         );
 
-        User::firstOrCreate(
-            ['email' => 'admin2@gmail.com'], // si cet email existe, ne pas recréer
-            [
-                'name' => 'Admin',
-                'password' => Hash::make('EEJCADMIN2'),
-                'role' => 'user',
-            ]
+        $this->createUserFromEnvironment(
+            config('initial_users.staff.email'),
+            config('initial_users.staff.password'),
+            config('initial_users.staff.name'),
+            'manager'
+        );
+    }
+
+    private function createUserFromEnvironment(?string $email, ?string $password, string $name, string $role): void
+    {
+        if (! $email || ! $password) {
+            return;
+        }
+
+        \App\Models\User::firstOrCreate(
+            ['email' => $email],
+            ['name' => $name, 'password' => $password, 'role' => $role]
         );
     }
 

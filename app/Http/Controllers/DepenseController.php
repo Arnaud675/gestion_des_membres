@@ -9,6 +9,7 @@ use App\Models\Caisse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AuditLogger;
 
 class DepenseController extends Controller
 {
@@ -54,7 +55,7 @@ class DepenseController extends Controller
                                         ->get()
         ];
 
-        $members = Member::orderBy('nom')->get();
+        $members = Member::active()->orderBy('nom')->get();
         $typesEvenements = Depense::TYPES_EVENEMENTS;
 
         return view('depenses.index', compact('depenses', 'stats', 'members', 'typesEvenements'));
@@ -65,7 +66,11 @@ class DepenseController extends Controller
      */
     public function create(Request $request)
     {
-        $members = Member::orderBy('nom')->get();
+        if (! Auth::user()->canManageDepenses()) {
+            return redirect()->route('depenses.index')->with('error', 'Vous n’avez pas la permission de gérer les dépenses.');
+        }
+
+        $members = Member::active()->orderBy('nom')->get();
         $typesEvenements = Depense::TYPES_EVENEMENTS;
         $soldeGlobal = Caisse::getSoldeGlobal();
         $selectedMember = $request->member_id ? Member::find($request->member_id) : null;
@@ -78,6 +83,10 @@ class DepenseController extends Controller
      */
     public function store(Request $request)
     {
+        if (! Auth::user()->canManageDepenses()) {
+            return redirect()->route('depenses.index')->with('error', 'Vous n’avez pas la permission de gérer les dépenses.');
+        }
+
         $validated = $request->validate([
             'member_id' => 'required|exists:members,id',
             'type_evenement' => 'required|in:' . implode(',', array_keys(Depense::TYPES_EVENEMENTS)),
@@ -92,6 +101,8 @@ class DepenseController extends Controller
             // Vérifier le solde global
             $soldeGlobal = Caisse::getSoldeGlobal();
             if ($soldeGlobal < $validated['montant']) {
+                DB::rollBack();
+
                 return back()->withErrors([
                     'montant' => 'Solde global insuffisant. Solde disponible : ' . number_format($soldeGlobal, 0, ',', ' ') . ' FCFA'
                 ])->withInput();
@@ -111,6 +122,13 @@ class DepenseController extends Controller
             Caisse::retirerMontant($validated['montant']);
 
             DB::commit();
+
+            AuditLogger::log(
+                'created',
+                $depense,
+                'Création de la dépense ' . $depense->reference . ' de ' . number_format($depense->montant, 0, ',', ' ') . ' FCFA',
+                $depense->member->nom . ' ' . $depense->member->prenoms
+            );
 
             return redirect()->route('depenses.show', $depense)
                             ->with('success', 'Dépense enregistrée avec succès. Référence : ' . $depense->reference);
@@ -137,7 +155,11 @@ class DepenseController extends Controller
      */
     public function edit(Depense $depense)
     {
-        $members = Member::orderBy('nom')->get();
+        if (! Auth::user()->canManageDepenses()) {
+            return redirect()->route('depenses.index')->with('error', 'Vous n’avez pas la permission de gérer les dépenses.');
+        }
+
+        $members = Member::active()->orderBy('nom')->get();
         $typesEvenements = Depense::TYPES_EVENEMENTS;
         $soldeGlobal = Caisse::getSoldeGlobal();
         
@@ -152,6 +174,10 @@ class DepenseController extends Controller
      */
     public function update(Request $request, Depense $depense)
     {
+        if (! Auth::user()->canManageDepenses()) {
+            return redirect()->route('depenses.index')->with('error', 'Vous n’avez pas la permission de gérer les dépenses.');
+        }
+
         $validated = $request->validate([
             'type_evenement' => 'required|in:' . implode(',', array_keys(Depense::TYPES_EVENEMENTS)),
             'montant' => 'required|numeric|min:1|max:100000000',
@@ -167,6 +193,8 @@ class DepenseController extends Controller
             
             // Si le nouveau montant est plus élevé, vérifier le solde
             if ($difference > 0 && $soldeGlobal < $difference) {
+                DB::rollBack();
+
                 return back()->withErrors([
                     'montant' => 'Solde global insuffisant pour cette augmentation. Solde disponible : ' . number_format($soldeGlobal, 0, ',', ' ') . ' FCFA'
                 ])->withInput();
@@ -186,6 +214,13 @@ class DepenseController extends Controller
 
             DB::commit();
 
+            AuditLogger::log(
+                'updated',
+                $depense,
+                'Modification de la dépense ' . $depense->reference . ' : ' . number_format($depense->montant, 0, ',', ' ') . ' FCFA',
+                $depense->member->nom . ' ' . $depense->member->prenoms
+            );
+
             return redirect()->route('depenses.show', $depense)
                             ->with('success', 'Dépense modifiée avec succès');
 
@@ -200,6 +235,10 @@ class DepenseController extends Controller
      */
     public function destroy(Depense $depense)
     {
+        if (! Auth::user()->canManageDepenses()) {
+            return redirect()->route('depenses.index')->with('error', 'Vous n’avez pas la permission de gérer les dépenses.');
+        }
+
         try {
             DB::beginTransaction();
             
@@ -209,6 +248,13 @@ class DepenseController extends Controller
             $depense->delete();
 
             DB::commit();
+
+            AuditLogger::log(
+                'deleted',
+                $depense,
+                'Suppression de la dépense ' . $depense->reference . ' de ' . number_format($depense->montant, 0, ',', ' ') . ' FCFA',
+                $depense->member->nom . ' ' . $depense->member->prenoms
+            );
 
             return redirect()->route('depenses.index')
                             ->with('success', 'Dépense supprimée avec succès');

@@ -1,5 +1,6 @@
-{{-- resources/views/depenses/create.blade.php --}}
 @extends('layouts.app')
+
+@section('title', 'Nouvelle dépense')
 
 @section('content')
 <div class="depense-create-container">
@@ -18,17 +19,9 @@
                 </svg>
                 Nouvelle dépense
             </h1>
-        </div>
-        <div class="page-badge">
-            <span class="badge">Formulaire d'enregistrement</span>
+            <p class="page-subtitle">Enregistrement d'une dépense de caisse pour un membre</p>
         </div>
     </div>
-
-    @if($errors->any())
-        @foreach($errors->all() as $error)
-            <script>document.addEventListener('DOMContentLoaded', function() { showToast('{{ $error }}', 'error'); });</script>
-        @endforeach
-    @endif
 
     <div class="form-card">
         <form action="{{ route('depenses.store') }}" method="POST" class="modern-form">
@@ -58,44 +51,24 @@
                         </svg>
                     </div>
                     <div class="header-title">
-                        <h2>Membre concerné</h2>
-                        <p>Sélectionnez le membre bénéficiaire</p>
+                        <h2>Membre bénéficiaire</h2>
+                        <p>Sélectionnez le fidèle concerné par cette dépense</p>
                     </div>
                 </div>
+
                 <div class="section-body">
                     <div class="form-group">
                         <label>Membre <span class="required">*</span></label>
-                        @if(isset($selectedMember))
-                            <div class="member-selected-card">
-                                <div class="member-selected-info">
-                                    @if($selectedMember->photo)
-                                        <img src="{{ asset('storage/' . $selectedMember->photo) }}" class="member-selected-avatar">
-                                    @else
-                                        <div class="member-selected-avatar-placeholder">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                <circle cx="12" cy="7" r="4"></circle>
-                                            </svg>
-                                        </div>
-                                    @endif
-                                    <div>
-                                        <span class="member-selected-name">{{ $selectedMember->nom }} {{ $selectedMember->prenoms }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        @else
-                            <div class="select-wrapper">
-                                <select name="member_id" id="memberSelect" class="form-select" required>
-                                    <option value="" disabled selected>-- Sélectionnez un membre --</option>
-                                    @foreach($members as $member)
-                                        <option value="{{ $member->id }}">{{ $member->nom }} {{ $member->prenoms }}</option>
-                                    @endforeach
-                                </select>
-                                <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </div>
-                        @endif
+                        <div class="select-wrapper">
+                            <select name="member_id" id="memberSelect" class="form-select" required>
+                                <option value="" disabled {{ old('member_id') ? '' : 'selected' }}>-- Sélectionner un membre --</option>
+                                @foreach($members as $member)
+                                    <option value="{{ $member->id }}" {{ old('member_id') == $member->id ? 'selected' : '' }}>
+                                        {{ $member->nom }} {{ $member->prenoms }} (N° {{ $member->numero_membre }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         @error('member_id')
                             <span class="error-feedback">{{ $message }}</span>
                         @enderror
@@ -103,82 +76,72 @@
                 </div>
             </div>
 
-            <!-- Section 2: Type -->
+            <!-- Section 2: Type et montant -->
             <div class="form-section">
                 <div class="section-header">
                     <div class="header-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                         </svg>
                     </div>
                     <div class="header-title">
-                        <h2>Type d'événement</h2>
-                        <p>Précisez la nature de la dépense</p>
+                        <h2>Nature de la dépense</h2>
+                        <p>Type d'événement, montant et date</p>
                     </div>
                 </div>
-                <div class="section-body">
-                    <div class="form-group">
-                        <label>Type <span class="required">*</span></label>
-                        <div class="select-wrapper">
-                            <select name="type_evenement" id="typeSelect" class="form-select" required>
-                                <option value="" disabled selected>-- Sélectionnez un type --</option>
-                                @foreach($typesEvenements as $value => $label)
-                                    <option value="{{ $value }}" {{ old('type_evenement') == $value ? 'selected' : '' }}>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </div>
-                        @error('type_evenement')
-                            <span class="error-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-            </div>
 
-            <!-- Section 3: Montant et date -->
-            <div class="form-section">
-                <div class="section-header">
-                    <div class="header-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M12 6v6l4 2"></path>
-                        </svg>
-                    </div>
-                    <div class="header-title">
-                        <h2>Informations financières</h2>
-                        <p>Montant et date de la dépense</p>
-                    </div>
-                </div>
                 <div class="section-body">
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Montant (FCFA) <span class="required">*</span></label>
+                            <label>Type d'événement <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select name="type_evenement" id="typeSelect" class="form-select" required>
+                                    <option value="" disabled {{ old('type_evenement') ? '' : 'selected' }}>-- Type d'événement --</option>
+                                    @foreach($typesEvenements as $value => $label)
+                                        <option value="{{ $value }}" {{ old('type_evenement') == $value ? 'selected' : '' }}>
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('type_evenement')
+                                <span class="error-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label>Montant <span class="required">*</span></label>
                             <div class="input-group">
                                 <span class="input-prefix">FCFA</span>
                                 <input type="number" name="montant" id="montantInput" class="form-input with-prefix" 
-                                       value="{{ old('montant') }}" min="1" max="100000000" step="1" required>
+                                       value="{{ old('montant') }}" min="1" step="1" 
+                                       placeholder="Ex: 50 000" required>
                             </div>
                             <small class="input-hint" id="montantHint">Solde disponible : {{ number_format($soldeGlobal, 0, ',', ' ') }} FCFA</small>
                             @error('montant')
                                 <span class="error-feedback">{{ $message }}</span>
                             @enderror
                         </div>
+                    </div>
+
+                    <div class="form-row">
                         <div class="form-group">
-                            <label>Date <span class="required">*</span></label>
-                            <input type="date" name="date_depense" class="form-input" value="{{ old('date_depense', date('Y-m-d')) }}" required>
+                            <label>Date de dépense <span class="required">*</span></label>
+                            <div class="input-group">
+                                <input type="date" name="date_depense" class="form-input" 
+                                       value="{{ old('date_depense', date('Y-m-d')) }}" required>
+                            </div>
                             @error('date_depense')
                                 <span class="error-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
+
                     <div class="form-group">
-                        <label>Description</label>
+                        <label>Description / Motif</label>
                         <textarea name="description" class="form-textarea" rows="3" 
-                                  placeholder="Décrivez brièvement l'événement...">{{ old('description') }}</textarea>
+                                  placeholder="Décrivez brièvement le contexte de la dépense...">{{ old('description') }}</textarea>
                         @error('description')
                             <span class="error-feedback">{{ $message }}</span>
                         @enderror
@@ -186,7 +149,7 @@
                 </div>
             </div>
 
-            <!-- Section 4: Récapitulatif -->
+            <!-- Section 3: Récapitulatif -->
             <div class="form-section summary-section">
                 <div class="summary-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -218,10 +181,11 @@
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="16" x2="12" y2="12"></line>
                     </svg>
-                    Cette dépense sera déduite du solde global de la caisse
+                    Cette dépense sera déduite directement du solde global de la caisse
                 </div>
             </div>
 
+            <!-- Boutons d'action -->
             <div class="form-actions">
                 <a href="{{ route('depenses.index') }}" class="btn btn-outline">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -242,523 +206,7 @@
     </div>
 </div>
 
-<style>
-.depense-create-container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
-}
-
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.btn-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: white;
-    color: var(--gray-600);
-    border: 2px solid var(--gray-200);
-    border-radius: 0.75rem;
-    text-decoration: none;
-    transition: all 0.2s;
-}
-
-.btn-back:hover {
-    background: var(--gray-50);
-    border-color: var(--gray-300);
-    transform: translateX(-2px);
-}
-
-.btn-back svg {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-
-.page-title {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: var(--gray-800);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin: 0;
-}
-
-.page-title .icon {
-    width: 2rem;
-    height: 2rem;
-    color: var(--green);
-}
-
-.page-badge .badge {
-    padding: 0.5rem 1rem;
-    background: var(--green-soft);
-    color: var(--green-dark);
-    border-radius: 2rem;
-    font-size: 0.875rem;
-    border: 1px solid var(--green);
-}
-
-.alert-error {
-    background: var(--red-soft);
-    border: 1px solid var(--red);
-    border-radius: 1rem;
-    padding: 1.25rem;
-    margin-bottom: 2rem;
-}
-
-.alert-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: var(--red);
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-}
-
-.alert-header svg {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-
-.error-list {
-    margin: 0;
-    padding-left: 2rem;
-    color: var(--gray-700);
-}
-
-.form-card {
-    background: white;
-    border-radius: 1.5rem;
-    box-shadow: var(--shadow-xl);
-    overflow: hidden;
-    border: 1px solid var(--gray-200);
-}
-
-.modern-form {
-    padding: 2rem;
-}
-
-.solde-info-card {
-    background: linear-gradient(135deg, var(--yellow-soft) 0%, #fff9e6 100%);
-    border: 1px solid var(--yellow);
-    border-radius: 1rem;
-    padding: 1rem;
-    margin-bottom: 2rem;
-}
-
-.solde-info-content {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.solde-info-content svg {
-    width: 2rem;
-    height: 2rem;
-    color: var(--yellow);
-}
-
-.solde-label {
-    display: block;
-    font-size: 0.75rem;
-    color: var(--gray-600);
-    text-transform: uppercase;
-}
-
-.solde-value {
-    display: block;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--yellow-dark);
-}
-
-.form-section {
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--gray-200);
-    padding-bottom: 1.5rem;
-}
-
-.form-section:last-of-type {
-    border-bottom: none;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0;
-}
-
-.section-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.header-icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    background: var(--green-soft);
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--green);
-}
-
-.header-icon svg {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-
-.header-title h2 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--gray-800);
-    margin: 0 0 0.25rem;
-}
-
-.header-title p {
-    font-size: 0.875rem;
-    color: var(--gray-500);
-    margin: 0;
-}
-
-.form-group {
-    margin-bottom: 1.25rem;
-}
-
-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--gray-700);
-    margin-bottom: 0.5rem;
-}
-
-.required {
-    color: var(--red);
-    margin-left: 0.25rem;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.member-selected-card {
-    background: var(--gray-50);
-    border: 2px solid var(--green);
-    border-radius: 1rem;
-    padding: 1rem;
-}
-
-.member-selected-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.member-selected-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--green);
-}
-
-.member-selected-avatar-placeholder {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--gray-200);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.member-selected-avatar-placeholder svg {
-    width: 24px;
-    height: 24px;
-    color: var(--gray-400);
-}
-
-.member-selected-name {
-    display: block;
-    font-weight: 600;
-    color: var(--gray-800);
-}
-
-.input-group {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.form-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 0.95rem;
-    color: var(--gray-800);
-    border: 2px solid var(--gray-200);
-    border-radius: 0.75rem;
-    transition: all 0.2s;
-    outline: none;
-}
-
-.form-input.with-prefix {
-    padding-left: 4rem;
-}
-
-.form-input:focus {
-    border-color: var(--green);
-    box-shadow: 0 0 0 3px rgba(31, 168, 91, 0.1);
-}
-
-.input-prefix {
-    position: absolute;
-    left: 1rem;
-    color: var(--gray-500);
-    font-weight: 500;
-}
-
-.input-hint {
-    display: block;
-    font-size: 0.75rem;
-    color: var(--gray-500);
-    margin-top: 0.375rem;
-}
-
-.form-textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 0.95rem;
-    color: var(--gray-800);
-    border: 2px solid var(--gray-200);
-    border-radius: 0.75rem;
-    resize: vertical;
-    outline: none;
-}
-
-.form-textarea:focus {
-    border-color: var(--green);
-    box-shadow: 0 0 0 3px rgba(31, 168, 91, 0.1);
-}
-
-.select-wrapper {
-    position: relative;
-}
-
-.form-select {
-    width: 100%;
-    padding: 0.75rem 2.5rem 0.75rem 1rem;
-    font-size: 0.95rem;
-    color: var(--gray-800);
-    background: white;
-    border: 2px solid var(--gray-200);
-    border-radius: 0.75rem;
-    appearance: none;
-    outline: none;
-    cursor: pointer;
-}
-
-.form-select:focus {
-    border-color: var(--green);
-    box-shadow: 0 0 0 3px rgba(31, 168, 91, 0.1);
-}
-
-.select-arrow {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1rem;
-    height: 1rem;
-    color: var(--gray-400);
-    pointer-events: none;
-}
-
-.error-feedback {
-    display: block;
-    color: var(--red);
-    font-size: 0.75rem;
-    margin-top: 0.375rem;
-    padding-left: 0.5rem;
-    border-left: 2px solid var(--red);
-}
-
-.summary-section {
-    background: var(--gray-50);
-    border-radius: 1rem;
-    padding: 1.25rem;
-}
-
-.summary-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--gray-600);
-    font-weight: 500;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--gray-300);
-}
-
-.summary-header svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    color: var(--green);
-}
-
-.summary-content {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.summary-item {
-    text-align: center;
-    padding: 0.5rem;
-    background: white;
-    border-radius: 0.75rem;
-    border: 1px solid var(--gray-200);
-}
-
-.summary-item.highlight {
-    background: var(--green-soft);
-    border-color: var(--green);
-}
-
-.summary-label {
-    display: block;
-    font-size: 0.7rem;
-    color: var(--gray-500);
-    text-transform: uppercase;
-    margin-bottom: 0.25rem;
-}
-
-.summary-value {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--gray-800);
-}
-
-.summary-item.highlight .summary-value {
-    color: var(--green-dark);
-    font-size: 1rem;
-}
-
-.summary-note {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    color: var(--gray-500);
-    padding: 0.5rem;
-    background: white;
-    border-radius: 0.5rem;
-}
-
-.summary-note svg {
-    width: 1rem;
-    height: 1rem;
-    color: var(--yellow);
-}
-
-.form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
-}
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.875rem 1.75rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-    border-radius: 0.75rem;
-    transition: all 0.2s;
-    cursor: pointer;
-    border: none;
-    text-decoration: none;
-}
-
-.btn svg {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-
-.btn-primary {
-    background: var(--green);
-    color: white;
-    box-shadow: 0 4px 6px rgba(31, 168, 91, 0.2);
-}
-
-.btn-primary:hover {
-    background: var(--green-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(31, 168, 91, 0.3);
-}
-
-.btn-outline {
-    background: transparent;
-    color: var(--gray-600);
-    border: 2px solid var(--gray-200);
-}
-
-.btn-outline:hover {
-    background: var(--gray-100);
-    color: var(--gray-800);
-    transform: translateY(-1px);
-}
-
-@keyframes slideIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.form-section {
-    animation: slideIn 0.3s ease-out forwards;
-    opacity: 0;
-}
-.form-section:nth-child(1) { animation-delay: 0.1s; }
-.form-section:nth-child(2) { animation-delay: 0.2s; }
-.form-section:nth-child(3) { animation-delay: 0.3s; }
-.form-section:nth-child(4) { animation-delay: 0.4s; }
-
-@media (max-width: 768px) {
-    .depense-create-container { padding: 1rem; }
-    .header-left { flex-direction: column; align-items: flex-start; }
-    .page-title { font-size: 1.5rem; }
-    .modern-form { padding: 1.5rem; }
-    .form-row { grid-template-columns: 1fr; gap: 1rem; }
-    .summary-content { grid-template-columns: repeat(2, 1fr); }
-    .member-selected-info { flex-direction: column; text-align: center; }
-    .form-actions { flex-direction: column-reverse; }
-    .btn { width: 100%; justify-content: center; }
-}
-</style>
-
+@push('scripts')
 <script>
 const soldeGlobal = {{ $soldeGlobal }};
 
@@ -796,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 montantHint.style.color = 'var(--red)';
                 montantHint.innerHTML = '⚠️ Montant supérieur au solde disponible (' + formatNumber(soldeGlobal) + ' FCFA)';
             } else {
-                montantHint.style.color = 'var(--gray-500)';
+                montantHint.style.color = 'var(--text-muted)';
                 montantHint.innerHTML = 'Solde disponible : ' + formatNumber(soldeGlobal) + ' FCFA';
             }
         }
@@ -814,4 +262,5 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSummary();
 });
 </script>
+@endpush
 @endsection
