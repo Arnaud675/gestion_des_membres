@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Cotisation;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -58,6 +59,44 @@ class RolePermissionTest extends TestCase
         $this->actingAs($manager)
             ->get(route('members.create'))
             ->assertOk();
+    }
+
+    public function test_cotisation_actions_are_visible_to_admin_and_manager_only(): void
+    {
+        $member = Member::create([
+            'numero_membre' => 'MBR-COT-001',
+            'nom' => 'Doe',
+            'prenoms' => 'Jane',
+            'date_naissance' => '1990-05-10',
+            'lieu_naissance' => 'Lome',
+        ]);
+        $cotisation = Cotisation::create([
+            'member_id' => $member->id,
+            'mois' => 11,
+            'annee' => 2026,
+            'montant' => 400,
+            'date_paiement' => '2026-11-10',
+        ]);
+
+        foreach (['admin', 'manager'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get(route('cotisations.index'))
+                ->assertOk()
+                ->assertSee('Nouvelle cotisation')
+                ->assertSee(route('cotisations.edit', $cotisation), false)
+                ->assertSee(route('cotisations.destroy', $cotisation), false);
+        }
+
+        $reader = User::factory()->create(['role' => 'reader']);
+
+        $this->actingAs($reader)
+            ->get(route('cotisations.index'))
+            ->assertOk()
+            ->assertDontSee('Nouvelle cotisation')
+            ->assertDontSee(route('cotisations.edit', $cotisation), false)
+            ->assertDontSee(route('cotisations.destroy', $cotisation), false);
     }
 
     public function test_admin_can_open_user_role_management(): void

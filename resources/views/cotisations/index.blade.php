@@ -17,7 +17,7 @@
             <p class="page-subtitle">Suivez et enregistrez les contributions mensuelles des membres</p>
         </div>
         
-        @if(!auth()->user()->canManageCotisations())
+        @if(auth()->user()->canManageCotisations())
             <div class="header-actions">
                 <a href="{{ route('cotisations.create') }}" class="btn btn-primary">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -136,7 +136,7 @@
                             </td>
                             <td>
                                 <div class="actions">
-                                    @if(!auth()->user()->canManageCotisations())
+                                    @if(auth()->user()->canManageCotisations())
                                         <a href="{{ route('cotisations.edit', $cotisation->id) }}" 
                                            class="btn-edit" title="Modifier">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -172,7 +172,7 @@
                                     </svg>
                                     <h3>Aucune cotisation trouvée</h3>
                                     <p>Commencez par enregistrer la première cotisation</p>
-                                    @if(!auth()->user()->canManageCotisations())
+                                    @if(auth()->user()->canManageCotisations())
                                         <a href="{{ route('cotisations.create') }}" class="btn btn-primary" style="margin-top: 10px;">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                                 <line x1="12" y1="5" x2="12" y2="19"></line>
